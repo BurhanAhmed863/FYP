@@ -1,10 +1,20 @@
+// Hello.js
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet } from 'react-native';
+import { useTheme } from '../theme/ThemeContext';
 
 const Hello = () => {
+  const { colors, toggleTheme, themePreference } = useTheme();
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Hello World!</Text>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[styles.text, { color: colors.text }]}>Hello World!</Text>
+      
+      <Text style={{ color: colors.text }}>Current Theme: {themePreference}</Text>
+
+      <Button title="Light Theme" onPress={() => toggleTheme('light')} />
+      <Button title="Dark Theme" onPress={() => toggleTheme('dark')} />
+      <Button title="System Default" onPress={() => toggleTheme('system')} />
     </View>
   );
 };
@@ -14,12 +24,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0',
   },
   text: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: 'black',
   },
 });
 
