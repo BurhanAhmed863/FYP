@@ -11,7 +11,7 @@ const DashboardStyles = StyleSheet.create({
         flexDirection: 'row',
         marginTop: hp('5%'), // Responsive margin
     },
-    progressbar:{
+    progressbar: {
         position: 'absolute',
         alignItems: 'center',
         borderRadius: 20,
@@ -40,19 +40,20 @@ const DashboardStyles = StyleSheet.create({
     },
     title: {
         fontSize: wp('8%'), // Responsive font size
-        fontWeight: 'bold',
+        fontFamily: 'SignikaNegative-Bold',
         letterSpacing: wp('0.3%'),
-        // marginRight: wp('65%'), // Responsive
+        bottom: hp('0.7%'),
         marginBottom: hp('5%'), // Responsive margin
     },
     helloTxt: {
         fontSize: wp('7%'), // Responsive font size
-        // marginBottom: hp('3%'), // Responsive margin
+        fontFamily: 'SignikaNegative-Regular',
         letterSpacing: wp('0.2%'), // Responsive
     },
     welTxt: {
         fontSize: wp('7%'), // Responsive font size
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
+        fontFamily: 'SignikaNegative-Bold',
         letterSpacing: wp('0.2%'), // Responsive
     },
     cardContainer: {
@@ -99,7 +100,8 @@ const DashboardStyles = StyleSheet.create({
         left: wp('4%'), // Position the text from the left
         textAlign: 'left', // Align text to the left
         fontSize: wp('7%'), // Responsive font size
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
+        fontFamily: 'SignikaNegative-Bold',
         letterSpacing: wp('0.2%'), // Responsive
     },
     speedCardTxt: {
@@ -108,7 +110,9 @@ const DashboardStyles = StyleSheet.create({
         left: wp('4%'), // Position the text from the left
         textAlign: 'left', // Align text to the left
         fontSize: wp('5%'), // Responsive font size
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
+        fontFamily: 'SignikaNegative-Bold',
+
     },
     statsCardTxt: {
         position: 'absolute',
@@ -116,7 +120,9 @@ const DashboardStyles = StyleSheet.create({
         left: wp('4%'), // Position the text from the left
         textAlign: 'left', // Align text to the left
         fontSize: wp('5%'), // Responsive font size
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
+        fontFamily: 'SignikaNegative-Bold',
+
         letterSpacing: wp('0.3%'), // Responsive
     },
     cardTxt2: {
@@ -125,6 +131,8 @@ const DashboardStyles = StyleSheet.create({
         left: wp('4%'), // Position the text from the left
         textAlign: 'left', // Align text to the left
         fontSize: wp('3.5%'),
+        fontFamily: 'SignikaNegative-Regular',
+
         letterSpacing: wp('0.2%'), // Responsive
     },
     speedCardTxt2: {
@@ -134,6 +142,7 @@ const DashboardStyles = StyleSheet.create({
         marginRight: hp('5%'), // Position the text from the
         textAlign: 'left', // Align text to the left
         fontSize: wp('3.5%'),
+        fontFamily: 'SignikaNegative-Regular',
         letterSpacing: wp('0.2%'), // Responsive
     },
     cardTxt3: {
@@ -142,7 +151,8 @@ const DashboardStyles = StyleSheet.create({
         left: wp('4%'), // Position the text from the left
         textAlign: 'left', // Align text to the left
         fontSize: wp('5%'), // Responsive font size
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
+        fontFamily: 'SignikaNegative-Bold',
         letterSpacing: wp('0.2%'), // Responsive
     },
     speedCardTxt3: {
@@ -150,22 +160,25 @@ const DashboardStyles = StyleSheet.create({
         bottom: wp('6%'), // Position the text from the top
         textAlign: 'center', // Align text to the left
         fontSize: wp('17%'), // Responsive font size
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
+        fontFamily: 'SignikaNegative-Bold',
         letterSpacing: wp('0.2%'), // Responsive
     },
     cardTxt4: {
         position: 'absolute',
-        bottom: wp('10%'), // Position the text from the top
+        bottom: wp('11%'), // Position the text from the top
         left: wp('4%'), // Position the text from the left
         textAlign: 'left', // Align text to the left
         fontSize: wp('3.5%'),
+        fontFamily: 'SignikaNegative-Regular',
         letterSpacing: wp('0.2%'), // Responsive
     },
     speedCardTxt4: {
         position: 'absolute',
         bottom: wp('11%'), // Position the text from the top
         textAlign: 'center', // Align text to the left
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
+        fontFamily: 'SignikaNegative-Bold',
         fontSize: wp('3%'),
     },
     wicketIcon: {
@@ -201,14 +214,15 @@ const DashboardStyles = StyleSheet.create({
     input: {
         flex: 1,
         fontSize: wp('4.5%'), // Responsive font size
+        fontFamily: 'SignikaNegative-Regular',
         letterSpacing: wp('0.5%'), // Responsive
         padding: wp('2%'), // Responsive padding
     },
 
     buttonText: {
         fontSize: wp('7%'), // Responsive font size
-        fontWeight: 'bold',
-        fontFamily: 'Helvetica',
+        // fontWeight: 'bold',
+        fontFamily: 'SignikaNegative-Bold',
         letterSpacing: 1,
     },
     linkContainer: {
@@ -222,7 +236,8 @@ const DashboardStyles = StyleSheet.create({
     },
     linkbutton: {
         fontSize: wp('4%'), // Responsive font size
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
+        fontFamily: 'SignikaNegative-Bold',
         color: '#EB001B', // Customize the link color (could be a prominent color like red)
         marginLeft: wp('1%'), // Space between "Don't have an account?" and the "Sign up" button
     },

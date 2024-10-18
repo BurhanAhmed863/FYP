@@ -3,6 +3,9 @@ import { StyleSheet, Dimensions } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'; // Importing the library functions
 
 const SignupStyle = StyleSheet.create({
+  scrollContainer:{
+    flex:1,
+  },
   container: {
     flex: 1,
     padding: wp('5%'), // Responsive padding
@@ -19,10 +22,11 @@ const SignupStyle = StyleSheet.create({
   },
   title: {
     fontSize: wp('8%'), // Responsive font size
-    fontWeight: 'bold',
+    fontFamily: 'SignikaNegative-Bold',
+    // fontWeight: 'bold',
     letterSpacing: wp('0.4%'),
     marginRight: wp('50%'), // Responsive
-    marginTop: hp('6%'), // Responsive margin
+    marginTop: hp('16%'), // Responsive margin
     marginBottom: hp('5%'), // Responsive margin
   },
   inputContainer: {
@@ -44,7 +48,8 @@ const SignupStyle = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: wp('4.5%'), // Responsive font size
-    letterSpacing: wp('0.5%'), // Responsive
+    fontFamily: 'SignikaNegative-Regular',
+    letterSpacing: wp('0.3%'), // Responsive
     padding: wp('2%'), // Responsive padding
   },
   button: {
@@ -56,9 +61,16 @@ const SignupStyle = StyleSheet.create({
   },
   buttonText: {
     fontSize: wp('7%'), // Responsive font size
-    fontWeight: 'bold',
-    fontFamily: 'Helvetica',
+    // fontWeight: 'bold',
+    fontFamily: 'SignikaNegative-Bold',
     letterSpacing: 1,
+  },
+  errorText:{
+    fontSize: wp('4%'), // Responsive font size
+    bottom: hp('4%'), // Space between input and error message
+    color: 'red', // Default text color (change as needed)
+    alignSelf: 'flex-start', // Align error messages to the left
+    marginLeft: wp('10%'), // Align left with the input
   },
 });
 

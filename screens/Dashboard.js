@@ -42,7 +42,7 @@ const Dashboard = () => {
             </View>
             <View style={DashboardStyles.centeredContent}>
                 <View style={DashboardStyles.cardContainer}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => (navigation.navigate('Matches'))}>
                         <LinearGradient
                             colors={['#FEC570', '#F7A01F']} // Define your gradient colors
                             start={{ x: 1, y: 0 }} // Optional: starting point of the gradient
