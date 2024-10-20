@@ -82,11 +82,10 @@ const LoginStyle = StyleSheet.create({
   },
   errorText:{
     fontSize: wp('4%'), // Responsive font size
-    // position:'absolute',
-    right:wp('18%'),
-    bottom:hp('5%'),
-    fontFamily: 'SignikaNegative-Regular',
+    bottom: hp('4%'), // Space between input and error message
     color: 'red', // Default text color (change as needed)
+    alignSelf: 'flex-start', // Align error messages to the left
+    marginLeft: wp('10%'), // Align left with the input
   },
 });
 

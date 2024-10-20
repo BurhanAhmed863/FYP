@@ -6,6 +6,8 @@ import LoginStyle from '../styles/LoginStyle';
 import Icon from 'react-native-vector-icons/AntDesign';
 import apiConnection from './apiConnection';
 import CustomPopup from '../Modal/CustomPopup'; // Import the CustomPopup component
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = () => {
   const { colors } = useTheme();
@@ -52,38 +54,39 @@ const Login = () => {
 
   const handleLogin = async () => {
     if (!validateFields()) return;
-  
+
     setLoading(true);
     setShowPopup(true);
-  
+
     try {
-      const response = await fetch(`${apiIp}/login.php`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ user_email: userEmail, user_password: password }),
+      const response = await axios.post(`${apiIp}/login.php`, {
+        user_email: userEmail,
+        user_password: password,
       });
-  
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-  
-      const data = await response.json();
-  
-      if (data.status === 'error') {
+
+      const data = response.data;
+      console.log(data);
+
+      if (data.status === 'Error' || data.status === 'IncorrectCredentials') {
         setShowPopup(false);
-        Alert.alert('Login Failed', data.message);
+        Alert.alert('Login Failed', data.msg);
       } else {
         setShowPopup(false);
-        navigation.navigate('Dashboard');
+
+        // Check if token exists in the response
+        if (data.token) {
+          await AsyncStorage.setItem('userToken', data.token); // Store the token in AsyncStorage
+          navigation.navigate('Dashboard');
+        } else {
+          Alert.alert('UserNotFound', data.msg);
+        }
       }
     } catch (error) {
       setShowPopup(false);
       console.error('Error during login:', error);
-  
-      if (error.message.includes('Network request failed')) {
-        Alert.alert('Error', 'Network request failed. Please check your internet connection.');
+
+      if (error.response && error.response.status === 401) {
+        Alert.alert('Error', 'Invalid credentials. Please try again.');
       } else {
         Alert.alert('Error', 'Something went wrong. Please try again later.');
       }
@@ -91,8 +94,8 @@ const Login = () => {
       setLoading(false);
     }
   };
-  
-  
+
+
 
   return (
     <ScrollView style={LoginStyle.scrollContainer}>

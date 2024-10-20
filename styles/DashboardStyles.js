@@ -97,7 +97,7 @@ const DashboardStyles = StyleSheet.create({
     cardTxt: {
         position: 'absolute',
         top: wp('2%'), // Position the text from the top
-        left: wp('4%'), // Position the text from the left
+        left: wp('3.8%'), // Position the text from the left
         textAlign: 'left', // Align text to the left
         fontSize: wp('7%'), // Responsive font size
         // fontWeight: 'bold',

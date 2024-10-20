@@ -45,7 +45,7 @@ const Scoreboard = () => {
         <ScrollView style={[ScoreboardStyle.container, { backgroundColor: colors.background }]}>
             <View style={ScoreboardStyle.header}>
                 <View style={ScoreboardStyle.iconContainer}>
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Dashboard')}>
                         <AntDesign name="caretleft" size={25} color='#EB001B' />
                     </TouchableOpacity>
                 </View>

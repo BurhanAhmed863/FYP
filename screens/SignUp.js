@@ -79,31 +79,35 @@ const Signup = () => {
     setShowPopup(true);
 
     try {
-      console.log('Sending signup request to:', `${apiIp}/signUp.php`);
-      const response = await axios.post(`${apiIp}/signUp.php`, {
-        user_name,
-        user_email,
-        user_password,
-        save: true,
-      });
+        console.log('Sending signup request to:', `${apiIp}/signUp.php`);
+        const response = await axios.post(`${apiIp}/signUp.php`, {
+            user_name,
+            user_email,
+            user_password,
+            save: true,
+        });
 
-      console.log(response.data); // Check the response
-      const data = response.data;
-      if (data.status === 'success') {
-        await AsyncStorage.setItem('userToken', data.token);
-        Alert.alert('Success', 'Signup successful!');
-        navigation.navigate('Login');
-      } else {
-        Alert.alert('Error', data.message);
-      }
+        console.log(response.data); // Check the response
+        const data = response.data;
+        if (data.status === 'Success') {
+            // Check if a token is returned in the response
+            if (data.token) {
+                await AsyncStorage.setItem('userToken', data.token);
+            }
+            Alert.alert('Success', 'Signup successful!');
+            navigation.navigate('Login');
+        } else {
+            Alert.alert('Error', data.msg); // Use msg for error feedback
+        }
     } catch (error) {
-      console.error('Error during signup:', error);
-      Alert.alert('Error', error.response ? error.response.data : 'Network Error');
+        console.error('Error during signup:', error);
+        Alert.alert('Error', error.response ? error.response.data : 'Network Error');
     } finally {
-      setLoading(false); // Hide loading popup
-      setShowPopup(false);
+        setLoading(false); // Hide loading popup
+        setShowPopup(false);
     }
-  };
+};
+
 
   return (
     <ScrollView style={SignupStyle.scrollContainer}>

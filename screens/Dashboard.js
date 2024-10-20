@@ -167,7 +167,7 @@ const Dashboard = () => {
                 </View>
 
                 <View style={DashboardStyles.cardContainer}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => (navigation.navigate('Tournaments'))}>
                         <LinearGradient
                             colors={['#EB3F40', '#EC0820']} // Define your gradient colors
                             start={{ x: 1, y: 0 }} // Optional: starting point of the gradient
@@ -175,10 +175,10 @@ const Dashboard = () => {
                             style={DashboardStyles.card} // Apply the gradient to the button style
                         >
                             <Text style={[DashboardStyles.cardTxt, { color: "white" }]}>
-                                Matches
+                                Tournaments
                             </Text>
                             <Text style={[DashboardStyles.cardTxt2, { color: "white" }]}>
-                                Record your matches history
+                                Record your tournaments history
                             </Text>
                             <View style={[DashboardStyles.iconContainer]}>
                                 <AntDesign name="caretright" size={20} color={"white"} />
@@ -191,7 +191,7 @@ const Dashboard = () => {
                                 Last Activity
                             </Text>
                             <Text style={[DashboardStyles.cardTxt4, { color: "white" }]}>
-                                Friendly Match Score Card
+                                Friendly Tournament
                             </Text>
                         </LinearGradient>
                     </TouchableOpacity>

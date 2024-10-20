@@ -54,8 +54,16 @@ const MatchesStyle = StyleSheet.create({
         fontSize: wp('7%'), // Responsive font size
         // fontWeight:'bold',
         fontFamily: 'SignikaNegative-Bold',
-        left: wp('-10%'),
+        left: wp('-18%'),
         top: hp('17%'),
+    },
+    ongoingTxt: {
+        position: 'absolute',
+        fontSize: wp('7%'), // Responsive font size
+        // fontWeight:'bold',
+        fontFamily: 'SignikaNegative-Bold',
+        left: wp('-11%'),
+        bottom: hp('25%'),
     },
     line: {
         width: wp('70%'),
@@ -66,6 +74,7 @@ const MatchesStyle = StyleSheet.create({
         position: 'absolute',
         fontSize: wp('7%'), // Responsive font size
         // fontWeight:'bold',
+        position: 'absolute',
         fontFamily: 'SignikaNegative-Bold',
         left: wp('-7%'),
         bottom: hp('1%'),
@@ -122,6 +131,18 @@ const MatchesStyle = StyleSheet.create({
         top: hp('3%'),
         width: wp('31%'), // Responsive width
         height: hp('17%'), // Responsive width
+        marginBottom: hp('2%'),
+        alignItems: 'center',
+    },
+    battingCard: {
+        backgroundColor: '#E61717', // Blue color for the button
+        borderRadius: 15,
+        borderWidth: 4,
+        margin: wp('1%'),
+        padding: wp('1%'),
+        top: hp('3%'),
+        width: wp('27%'), // Responsive width
+        height: hp('12%'), // Responsive width
         marginBottom: hp('6%'),
         alignItems: 'center',
     },

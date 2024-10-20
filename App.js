@@ -11,6 +11,9 @@ import EnterTeam from './screens/EnterTeam';
 import EnterPlayers from './screens/EnterPlayers';
 import DetailMatch from './screens/DetailMatch';
 import Scoreboard from './screens/Scoreboard';
+import Tournaments from './screens/Tournaments';
+import EnterTournamentName from './screens/EnterTournamentName';
+import EnterTournamentTeamName from './screens/EnterTournamentTeamName';
 import { ThemeProvider } from './theme/ThemeContext'; // Ensure correct import path
 
 const Stack = createStackNavigator();
@@ -19,7 +22,7 @@ const App = () => {
   return (
     <ThemeProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login">
+        <Stack.Navigator initialRouteName="Dashboard">
           <Stack.Screen name="Hello" component={Hello} options={{ headerShown: false }} />
           <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
           <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
@@ -29,7 +32,10 @@ const App = () => {
           <Stack.Screen name="EnterPlayers" component={EnterPlayers} options={{ headerShown: false }} />
           <Stack.Screen name="DetailMatch" component={DetailMatch} options={{ headerShown: false }} />
           <Stack.Screen name="Scoreboard" component={Scoreboard} options={{ headerShown: false }} />
-        </Stack.Navigator>
+          <Stack.Screen name="Tournaments" component={Tournaments} options={{ headerShown: false }} />
+          <Stack.Screen name="EnterTournamentName" component={EnterTournamentName} options={{ headerShown: false }} />
+          <Stack.Screen name="EnterTournamentTeamName" component={EnterTournamentTeamName} options={{ headerShown: false }} />
+          </Stack.Navigator>
       </NavigationContainer>
     </ThemeProvider>
   );
