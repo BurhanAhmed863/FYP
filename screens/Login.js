@@ -98,7 +98,7 @@ const Login = () => {
 
 
   return (
-    <ScrollView style={LoginStyle.scrollContainer}>
+    <ScrollView style={[LoginStyle.scrollContainer, { backgroundColor: colors.background }]}>
       <View style={[LoginStyle.container, { backgroundColor: colors.background }]}>
         <View style={LoginStyle.iconContainer}>
           <TouchableOpacity onPress={() => navigation.goBack()}>

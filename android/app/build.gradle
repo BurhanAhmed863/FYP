@@ -78,6 +78,11 @@ android {
     compileSdk rootProject.ext.compileSdkVersion
 
     namespace "com.matchmate"
+    variantFilter { variant ->
+        if (variant.getFlavors().contains("mlkit")) {
+            variant.setIgnore(true)
+        }
+    }
     defaultConfig {
         applicationId "com.matchmate"
         minSdkVersion rootProject.ext.minSdkVersion

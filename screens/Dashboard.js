@@ -73,7 +73,7 @@ const Dashboard = () => {
                 </View>
 
                 <View style={DashboardStyles.speedCardContainer}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => (navigation.navigate('BallVision'))}>
                         <LinearGradient
                             colors={['#434343', '#000000']} // Define your gradient colors
                             start={{ x: 1, y: 0 }} // Optional: starting point of the gradient

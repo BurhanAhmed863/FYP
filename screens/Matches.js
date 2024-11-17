@@ -62,7 +62,7 @@ const Matches = () => {
                         </LinearGradient>
                     </TouchableOpacity>
                     
-                    <Text style={[MatchesStyle.addTxt, { color: colors.text }]}>Start New Match</Text>
+                    <Text style={[MatchesStyle.addTxt, { color: colors.text, marginLeft: 25}]}>Start New Match</Text>
 
                     <TouchableOpacity>
                         <LinearGradient
