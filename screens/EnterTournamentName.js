@@ -32,36 +32,35 @@ const EnterTournamentName = () => {
     const handleTournamentType = (type) => {
         setSelectedTournamentType(prevType => (prevType === type ? null : type));
     };
+
     const handleTeam = async () => {
-        navigation.navigate('EnterTournamentTeamName',{tournamentName, noOfTeam});
-        // if (isButtonDisabled) return;
-
-        // setLoading(true); // Show loader
-
-        // try {
-        //     const response = await axios.post(`${apiIp}/teamName.php`, {
-        //         teamName1,
-        //         teamName2
-        //     });
-
-        //     const result = response.data;
-
-        //     if (result.status === 'success') {
-        //         navigation.navigate('EnterPlayers', { teamName1, teamName2 });
-        //         console.log(result.message);
-        //         setTeam1('');
-        //         setTeam2('');
-        //     } else {
-        //         console.log(result.message);
-        //         Alert.alert('Error', result.message); // Show error message if any
-        //     }
-        // } catch (error) {
-        //     Alert.alert('Error', 'Something went wrong. Please try again later.');
-        // }
-        //  finally {
-        //     setLoading(false); // Hide loader
-        // }
+        if (isButtonDisabled) return;
+    
+        setLoading(true); // Show loader
+    
+        try {
+            const response = await axios.post(`${apiIp}/tournamentDetail.php`, {
+                tournamentName,
+                noOfTeam,
+                tournamentType: selectedTournamentType,
+            });
+    
+            const result = response.data;
+            console.log(response.data);
+    
+            if (result.status === 'Success') {
+                Alert.alert('Success', result.msg);
+                navigation.navigate('EnterTournamentTeamName', { tournamentName, noOfTeam, selectedTournamentType});
+            } else {
+                Alert.alert('Error', result.msg); // Show error message if any
+            }
+        } catch (error) {
+            Alert.alert('Error', 'Something went wrong. Please try again later.');
+        } finally {
+            setLoading(false); // Hide loader
+        }
     };
+    
 
     return (
         <ScrollView style={[EnterTeamStyle.container, { backgroundColor: colors.background }]}>

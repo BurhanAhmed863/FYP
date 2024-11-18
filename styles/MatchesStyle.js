@@ -23,7 +23,7 @@ const MatchesStyle = StyleSheet.create({
     },
     centeredContent: {
         flex: 1,               // This will make the content center properly
-        // justifyContent: 'center',
+        justifyContent: 'center',
         alignItems: 'center',
         marginBottom: wp('10%')
     },
@@ -51,18 +51,15 @@ const MatchesStyle = StyleSheet.create({
     },
     addTxt: {
         position: 'absolute',
-        fontSize: wp('7%'), // Responsive font size
-        // fontWeight:'bold',
+        fontSize: wp('7%'),
+        textAlign: 'center',
         fontFamily: 'SignikaNegative-Bold',
-        left: wp('-18%'),
         top: hp('17%'),
     },
     ongoingTxt: {
         position: 'absolute',
-        fontSize: wp('7%'), // Responsive font size
-        // fontWeight:'bold',
+        fontSize: wp('7%'),
         fontFamily: 'SignikaNegative-Bold',
-        left: wp('-11%'),
         bottom: hp('25%'),
     },
     line: {
@@ -72,11 +69,8 @@ const MatchesStyle = StyleSheet.create({
     },
     historyTxt: {
         position: 'absolute',
-        fontSize: wp('7%'), // Responsive font size
-        // fontWeight:'bold',
-        position: 'absolute',
+        fontSize: wp('7%'),
         fontFamily: 'SignikaNegative-Bold',
-        left: wp('-7%'),
         bottom: hp('1%'),
     },
     cardContainer: {
@@ -87,6 +81,8 @@ const MatchesStyle = StyleSheet.create({
     addCardContainer: {
         flex: 1,
         flexDirection: 'column',
+        justifyContent: 'center',
+        alignContent: 'center',
         marginTop: hp('3%'), // Responsive margin
     },
     overCardContainer: {
@@ -110,6 +106,7 @@ const MatchesStyle = StyleSheet.create({
         height: hp('13%'), // Responsive width
         marginBottom: hp('10%'),
         alignItems: 'center',
+        justifyContent: 'center'
     },
     oversCard: {
         backgroundColor: '#E61717', // Blue color for the button

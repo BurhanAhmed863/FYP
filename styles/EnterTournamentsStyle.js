@@ -28,10 +28,11 @@ const EnterTournamentsStyle = StyleSheet.create({
         margin: wp('1%'),
         marginBottom: hp('3%'),
         // right: wp('23%'),
-        // padding: hp('2.5%'), // Responsive padding
+        // padding: hp('2%'), // Responsive padding
         width: wp('35%'), // Responsive width
         height: hp('17%'), // Responsive width
         alignItems: 'center',
+        justifyContent: 'center'
     },
     cardTxt: {
         position: 'absolute',
@@ -63,24 +64,10 @@ const EnterTournamentsStyle = StyleSheet.create({
     },
     statsCardTxt: {
         // position: 'absolute',
-        top: hp('4.5%'), // Position the text from the top
-        padding: wp('2%'),
-        textAlign: 'center', // Align text to the left
-        fontSize: wp('5%'), // Responsive font size
-        // fontWeight: 'bold',
+        textAlign: 'center',
+        fontSize: wp('4%'),
         fontFamily: 'SignikaNegative-Regular',
-
-        letterSpacing: wp('0.3%'), // Responsive
-    },
-    speedCardTxt2: {
-        position: 'absolute',
-        top: wp('7%'), // Position the text from the top
-        left: wp('4%'), // Position the text from the left
-        marginRight: hp('5%'), // Position the text from the
-        textAlign: 'left', // Align text to the left
-        fontSize: wp('3.5%'),
-        fontFamily: 'SignikaNegative-Regular',
-        letterSpacing: wp('0.2%'), // Responsive
+        letterSpacing: wp('0.6%'), // Responsive
     },
     speedCardTxt3: {
         position: 'absolute',

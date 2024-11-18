@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import MatchesStyle from '../styles/MatchesStyle';
 import Icon from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import FontAwesome from 'react-native-vector-icons/FontAwesome'; 
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
 
 const Matches = () => {
@@ -34,21 +34,21 @@ const Matches = () => {
             <View style={MatchesStyle.middleText}>
                 <Text style={[MatchesStyle.welTxt, { color: colors.text }]}>Start playing match</Text>
             </View>
-            <View style={MatchesStyle.centeredContent}>
-                <View style={MatchesStyle.cardContainer}>
-                    <LinearGradient
-                        colors={['#000000', '#434343']} // Define your gradient colors
-                        start={{ x: 1, y: 0 }} // Optional: starting point of the gradient
-                        end={{ x: 1, y: 1 }}   // Optional: ending point of the gradient
-                        style={MatchesStyle.card} // Apply the gradient to the button style
-                    >
-                        <View style={[MatchesStyle.AvsBIcon]}>
-                            <Image source={AvsB} style={MatchesStyle.cardIcon}></Image>
-                        </View>
-                    </LinearGradient>
-                </View>
+            <View style={MatchesStyle.cardContainer}>
+                <LinearGradient
+                    colors={['#000000', '#434343']} // Define your gradient colors
+                    start={{ x: 1, y: 0 }} // Optional: starting point of the gradient
+                    end={{ x: 1, y: 1 }}   // Optional: ending point of the gradient
+                    style={MatchesStyle.card} // Apply the gradient to the button style
+                >
+                    <View style={[MatchesStyle.AvsBIcon]}>
+                        <Image source={AvsB} style={MatchesStyle.cardIcon}></Image>
+                    </View>
+                </LinearGradient>
+            </View>
 
-                <View style={MatchesStyle.addCardContainer}>
+            <View style={MatchesStyle.addCardContainer}>
+                <View style={MatchesStyle.centeredContent}>
                     <TouchableOpacity onPress={() => (navigation.navigate('EnterTeam'))}>
                         <LinearGradient
                             colors={['#FEC570', '#F7A01F']} // Define your gradient colors
@@ -61,8 +61,8 @@ const Matches = () => {
                             </View>
                         </LinearGradient>
                     </TouchableOpacity>
-                    
-                    <Text style={[MatchesStyle.addTxt, { color: colors.text, marginLeft: 25}]}>Start New Match</Text>
+
+                    <Text style={[MatchesStyle.addTxt, { color: colors.text }]}>Start New Match</Text>
 
                     <TouchableOpacity>
                         <LinearGradient

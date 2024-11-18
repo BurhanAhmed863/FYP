@@ -35,21 +35,21 @@ const Tournaments = () => {
             <View style={MatchesStyle.middleText}>
                 <Text style={[MatchesStyle.welTxt, { color: colors.text }]}>Start playing Tournaments</Text>
             </View>
-            <View style={MatchesStyle.centeredContent}>
-                <View style={MatchesStyle.cardContainer}>
-                    <LinearGradient
-                        colors={['#000000', '#434343']} // Define your gradient colors
-                        start={{ x: 1, y: 0 }} // Optional: starting point of the gradient
-                        end={{ x: 1, y: 1 }}   // Optional: ending point of the gradient
-                        style={MatchesStyle.card} // Apply the gradient to the button style
-                    >
-                        <View style={[MatchesStyle.AvsBIcon]}>
-                            <Image source={AvsB} style={MatchesStyle.cardIcon}></Image>
-                        </View>
-                    </LinearGradient>
-                </View>
+            <View style={MatchesStyle.cardContainer}>
+                <LinearGradient
+                    colors={['#000000', '#434343']} // Define your gradient colors
+                    start={{ x: 1, y: 0 }} // Optional: starting point of the gradient
+                    end={{ x: 1, y: 1 }}   // Optional: ending point of the gradient
+                    style={MatchesStyle.card} // Apply the gradient to the button style
+                >
+                    <View style={[MatchesStyle.AvsBIcon]}>
+                        <Image source={AvsB} style={MatchesStyle.cardIcon}></Image>
+                    </View>
+                </LinearGradient>
+            </View>
 
-                <View style={MatchesStyle.addCardContainer}>
+            <View style={MatchesStyle.addCardContainer}>
+                <View style={MatchesStyle.centeredContent}>
 
                     <TouchableOpacity >
                         <LinearGradient
@@ -92,7 +92,7 @@ const Tournaments = () => {
                         </LinearGradient>
                     </TouchableOpacity>
 
-                    <Text style={[MatchesStyle.historyTxt, { color: colors.text, marginLeft: -35 }]}>Tournaments History</Text>
+                    <Text style={[MatchesStyle.historyTxt, { color: colors.text }]}>Tournaments History</Text>
 
                 </View>
             </View>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
-import { useTheme } from '../theme/ThemeContext'; // Assuming you have the theme context set up
+import { useTheme } from '../theme/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
 import EnterPlayersStyle from '../styles/EnterPlayersStyle';
 import Icon from 'react-native-vector-icons/Feather';
@@ -8,73 +8,86 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
-import CustomPopup from '../Modal/CustomPopup'; // Import your loader
+import CustomPopup from '../Modal/CustomPopup';
 import apiConnection from './apiConnection';
 
-const EnterTournamentTeamName = ({ route }) => {
+const EnterTournamentPlayers = ({ route }) => {
     const { colors } = useTheme();
     const navigation = useNavigation();
-    const { tournamentName, noOfTeam, selectedTournamentType } = route.params; // Get team names from params
+    const { noOfTeam, teamNames, selectedTournamentType } = route.params; // Get number of teams and their names
     const { apiIp } = apiConnection;
-    const team = parseInt(noOfTeam, 10);
-    const [teamNames, setTeamNames] = useState(Array(team).fill(''));
-    console.log(team, tournamentName, teamNames);
-    const [currentTeam, setCurrentTeam] = useState(1); // 1 for team 1, 2 for team 2
-    const [team1Players, setTeam1Players] = useState([]); // To store team 1's players
-    const [loading, setLoading] = useState(false); // State for loader
+
+    const initialPlayersState = Array.from({ length: noOfTeam }, () => Array(11).fill(''));
+    const [teamsPlayers, setTeamsPlayers] = useState(initialPlayersState);
+    const [currentTeam, setCurrentTeam] = useState(0); // Track which team's players are being entered
+    const [loading, setLoading] = useState(false); // Loader state
 
     const AvsB = colors.background === '#333' ? require('../assets/icons/AvB.png') : require('../assets/icons/AvB.png');
     const userIcon = colors.background === '#333' ? require('../assets/icons/user_white.png') : require('../assets/icons/user.png');
 
-    // Determine if the button should be disabled
-    const isButtonDisabled = teamNames.some((name) => name.trim() === '');
-    // Save team 1 data and move to team 2
-    const handleChange = (index, value) => {
-        const newTeamNames = [...teamNames];
-        newTeamNames[index] = value;
-        setTeamNames(newTeamNames);
+    // Handle player name input
+    const handlePlayerChange = (teamIndex, playerIndex, value) => {
+        const updatedTeams = [...teamsPlayers];
+        updatedTeams[teamIndex][playerIndex] = value;
+        setTeamsPlayers(updatedTeams);
     };
 
-    const handleFinish = async () => {
-        setLoading(true); // Show loader
-        try {
-            const response = await axios.post(`${apiIp}/tournamentTeamName.php`, {
-                teamNames,
-                type: selectedTournamentType, // Replace 'League' with the selected type
-            });
-    
-            const result = response.data;
-    
-            if (result.status === 'Success') {
-                Alert.alert('Success', 'Teams added successfully!');
-                navigation.navigate('EnterTournamentPlayers', { noOfTeam, teamNames, selectedTournamentType});
-            } else {
-                Alert.alert('Error', result.msg || 'Failed to add teams');
-            }
-        } catch (error) {
-            Alert.alert('Error', 'An error occurred while adding teams');
-        } finally {
-            setLoading(false); // Hide loader
+    // Determine if "Next" or "Finish" button should be enabled
+    const isButtonDisabled = teamsPlayers[currentTeam].some((name) => name.trim() === '');
+
+    // Handle "Next Team" button click
+    const handleNextTeam = () => {
+        if (isButtonDisabled) {
+            Alert.alert('Error', `Please fill all 11 player names for ${teamNames[currentTeam]}`);
+        } else {
+            setCurrentTeam((prev) => prev + 1);
         }
     };
-    
+
+    // Handle "Finish" button click
+    const handleFinish = async () => {
+        if (isButtonDisabled) {
+            Alert.alert('Error', `Please fill all 11 player names for ${teamNames[currentTeam]}`);
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const response = await axios.post(`${apiIp}/tournamenPlayerName.php`, {
+                teamsPlayers,
+                teamNames,
+            });
+            console.log(response.data);
+            if (response.data.status === 'success') {
+                Alert.alert('Success', 'All players submitted successfully!');
+                navigation.navigate('DetailMatch', { teamsPlayers, teamNames });
+                setTeamsPlayers(initialPlayersState); // Reset after submission
+            } else {
+                Alert.alert('Error', response.data.message);
+            }
+        } catch (error) {
+            Alert.alert('Error', 'Failed to submit players. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <ScrollView style={[EnterPlayersStyle.container, { backgroundColor: colors.background }]}>
             <View style={EnterPlayersStyle.header}>
                 <View style={EnterPlayersStyle.iconContainer}>
                     <TouchableOpacity onPress={() => navigation.navigate('Dashboard')}>
-                        <AntDesign name="caretleft" size={25} color='#EB001B' />
+                        <AntDesign name="caretleft" size={25} color="#EB001B" />
                     </TouchableOpacity>
                 </View>
-                <Text style={[EnterPlayersStyle.title, { color: colors.text }]}>Tournaments</Text>
+                <Text style={[EnterPlayersStyle.title, { color: colors.text }]}>Matches</Text>
                 <Image source={userIcon} style={EnterPlayersStyle.icon} />
                 <Icon name="search" size={23} color="#f79e1b" style={EnterPlayersStyle.iconSearch} />
             </View>
 
             <View style={EnterPlayersStyle.middleText}>
                 <Text style={[EnterPlayersStyle.welTxt, { color: colors.text }]}>
-                    Enter team names
+                    Enter player names for {teamNames[currentTeam]}
                 </Text>
             </View>
 
@@ -91,32 +104,32 @@ const EnterTournamentTeamName = ({ route }) => {
                         </View>
                     </LinearGradient>
 
-                    {teamNames.map((name, index) => (
+                    {teamsPlayers[currentTeam].map((playerName, index) => (
                         <View key={index} style={EnterPlayersStyle.inputContainer}>
                             <MaterialCommunityIcons name="cricket" size={25} style={EnterPlayersStyle.inputIcon} color={colors.text} />
                             <TextInput
                                 style={[EnterPlayersStyle.input, { color: colors.text }]}
-                                placeholder={`Team ${index + 1} name`}
+                                placeholder={`Player ${index + 1}`}
                                 placeholderTextColor={colors.text}
-                                value={name}
-                                onChangeText={(value) => handleChange(index, value)}
+                                value={playerName}
+                                onChangeText={(value) => handlePlayerChange(currentTeam, index, value)}
                             />
                         </View>
                     ))}
 
                     <TouchableOpacity
-                        style={[EnterPlayersStyle.button, { backgroundColor: isButtonDisabled ? 'grey' : 'red' }]}
-                        onPress={handleFinish}
-                        disabled={isButtonDisabled}
+                        style={[EnterPlayersStyle.button, { backgroundColor: isButtonDisabled ? 'gray' : 'red' }]}
+                        onPress={currentTeam < noOfTeam - 1 ? handleNextTeam : handleFinish}
                     >
                         <Text style={[EnterPlayersStyle.buttonText, { color: 'white' }]}>
-                            Next
+                            {currentTeam < noOfTeam - 1 ? `Next Team (${teamNames[currentTeam + 1]})` : 'Finish'}
                         </Text>
                     </TouchableOpacity>
                 </View>
             </View>
+            <CustomPopup visible={loading} message="Submitting players..." />
         </ScrollView>
     );
 };
 
-export default EnterTournamentTeamName;
+export default EnterTournamentPlayers;

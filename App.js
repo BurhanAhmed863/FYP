@@ -15,6 +15,7 @@ import Scoreboard from './screens/Scoreboard';
 import Tournaments from './screens/Tournaments';
 import EnterTournamentName from './screens/EnterTournamentName';
 import EnterTournamentTeamName from './screens/EnterTournamentTeamName';
+import EnterTournamentPlayers from './screens/EnterTournamentPlayers';
 import { ThemeProvider } from './theme/ThemeContext'; // Ensure correct import path
 import BowlingSpeed from './screens/BowlingSpeed';
 import BallVision from './screens/BallVision';
@@ -41,6 +42,7 @@ const App = () => {
           <Stack.Screen name="Tournaments" component={Tournaments} options={{ headerShown: false }} />
           <Stack.Screen name="EnterTournamentName" component={EnterTournamentName} options={{ headerShown: false }} />
           <Stack.Screen name="EnterTournamentTeamName" component={EnterTournamentTeamName} options={{ headerShown: false }} />
+          <Stack.Screen name="EnterTournamentPlayers" component={EnterTournamentPlayers} options={{ headerShown: false }} />
           <Stack.Screen name="SpeedDisplayScreen" component={SpeedDisplayScreen} options={{ headerShown: false }} />
           <Stack.Screen name="BallVision" component={BallVision} options={{ headerShown: false }} />
           <Stack.Screen name="BallVisionPreview" component={BallVisionPreview} options={{ headerShown: false }} />
