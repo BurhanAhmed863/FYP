@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { useTheme } from '../theme/ThemeContext';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -10,6 +10,7 @@ import axios from 'axios';
 import LinearGradient from 'react-native-linear-gradient';
 import apiConnection from './apiConnection';
 import CustomPopup from '../Modal/CustomPopup';
+import RNPickerSelect from 'react-native-picker-select';
 
 const DetailMatch = () => {
     const { colors } = useTheme();
@@ -18,9 +19,34 @@ const DetailMatch = () => {
     const [selectedTeam, setSelectedTeam] = useState(null);
     const [selectedOver, setSelectedOver] = useState(null);
     const [tossWinner, setTossWinner] = useState(null);
-    const { teamName1, teamId1, teamName2, teamId2 } = useRoute().params;
+    const [team1, setTeam1] = useState(null);  // Store team1
+    const [team2, setTeam2] = useState(null);  // Store team2
+    const [matchId, setMacthId] = useState(null);  // Store team2
+    const [team1Id, setTeam1Id] = useState(null);  // Store team 1 ID
+    const [team2Id, setTeam2Id] = useState(null);  // Store team 2 ID
+    const [teams, setTeams] = useState([]);
     const [loading, setLoading] = useState(false); // State for loader
     const { apiIp } = apiConnection;
+
+    useEffect(() => {
+        // Fetch team data when the component mounts
+        const fetchTeams = async () => {
+            try {
+                const response = await axios.get(`${apiIp}/fetchTeams.php`);
+                if (response.data.status === 'success') {
+                    setTeams(response.data.teams);
+                } else {
+                    console.error('Error fetching teams:', response.data.message);
+                    alert('Failed to load teams');
+                }
+            } catch (error) {
+                console.error('Error occurred:', error);
+                alert('An error occurred while loading teams. Please try again.');
+            }
+        };
+
+        fetchTeams();
+    }, []);
 
     const isValidCustomOvers = (value) => {
         const number = Number(value);
@@ -40,20 +66,48 @@ const DetailMatch = () => {
     const handleSelectTeam = (team) => {
         setSelectedTeam(selectedTeam === team ? null : team);
     };
-    
+
     const handleSelectTossWinner = (team) => {
         setTossWinner(tossWinner === team ? null : team);
     };
 
+    // Ensure team1 and team2 are not the same
+    const handleSelectTeam1 = (team) => {
+        if (team !== team2) {
+            setTeam1(team);
+            setTeam1Id(team.id);
+        } else if (team === null) {
+            setTeam1(null); // Allow unselecting
+            setTeam1Id(null);
+        } else if (team != null) {
+            alert("Team 1 and Team 2 cannot be the same");
+        }
+    };
+
+    const handleSelectTeam2 = (team) => {
+        if (team !== team1) {
+            setTeam2(team);
+            setTeam2Id(team.id);
+        }
+        else if (team === null) {
+            setTeam2(null); // Allow unselecting
+            setTeam2Id(null);
+        }
+        else if (team != null) {
+            alert("Team 1 and Team 2 cannot be the same");
+        }
+    };
+
     const handleSubmit = async () => {
         const matchData = {
-            teamId1,
-            teamId2,
+            team1Id: team1Id,
+            team2Id: team2Id,
             totalOvers: selectedOver || overs,
-            tossWon: tossWinner,
-            battingFirst: selectedTeam,
+            tossWon: tossWinner.name,
+            battingFirst: selectedTeam.id,
+            bowlingFirst: selectedTeam.id === team1.id ? team2.id : team1.id,
         };
-        console.log(matchData)
+        console.log('mATCH dATA',matchData);
         setLoading(true);
         try {
             const response = await axios.post(`${apiIp}/insertMatchDetail.php`, matchData, {
@@ -61,20 +115,29 @@ const DetailMatch = () => {
                     'Content-Type': 'application/json',
                 },
             });
+            setMacthId(response.data.matchId);
+            console.log(response.data);
+            console.log(response.data.matchId);
 
             if (response.data.status === 'success') {
-                navigation.navigate('Scoreboard');
+                navigation.navigate('Scoreboard', {matchId: response.data.matchId});
                 setLoading(false);
             } else {
                 console.error('Error saving match details:', response.data.message);
-                alert(response.data.message); // Show an alert for better user feedback
+                alert(response.data.message);
             }
         } catch (error) {
             console.error('Error occurred:', error);
-            alert('An error occurred while saving match details. Please try again.'); // Show a user-friendly error message
+            alert('An error occurred while saving match details. Please try again.');
         }
     };
-
+    const handleSwapTeams = () => {
+        setTeam1(prev => {
+            const temp = team2;
+            setTeam2(prev);
+            return temp;
+        });
+    };
     return (
         <ScrollView style={[MatchesStyle.container, { backgroundColor: colors.background }]}>
             <View style={MatchesStyle.header}>
@@ -106,7 +169,6 @@ const DetailMatch = () => {
                 </View>
 
                 <Text style={[MatchesStyle.overHeader, { color: "orange" }]}>Select Overs</Text>
-
                 <View style={MatchesStyle.overCardContainer}>
                     {[5, 10, 15, 20, 50].map((over) => (
                         <TouchableOpacity
@@ -139,49 +201,101 @@ const DetailMatch = () => {
                     />
                 </View>
 
-                <Text style={[MatchesStyle.overHeader, { color: "orange" }]}>Who Won the Toss</Text>
+                {/* Dropdowns for Team Selection */}
+                <Text style={[MatchesStyle.overHeader, { color: "orange" }]}>Select Team 1</Text>
+                <RNPickerSelect
+                    placeholder={{ label: 'Select Team 1', value: null }}
+                    items={[
+                        { label: 'None', value: null }, // Adding the "None" option for unselecting
+                        ...teams.map(team => ({ label: team.name, value: team })),
+                    ]}
+                    onValueChange={handleSelectTeam1}
+                    style={{
+                        inputAndroid: {
+                            borderColor: '#E61717',
+                            color: colors.text,
+                            padding: 10,
+                            borderRadius: 5,
+                        },
+                        inputIOS: {
+                            borderColor: '#E61717',
+                            color: colors.text,
+                            padding: 10,
+                            borderRadius: 5,
+                        }
+                    }}
+                />
 
-                <View style={MatchesStyle.overCardContainer}>
-                    <TouchableOpacity
-                        style={[MatchesStyle.tossCard, { borderColor: tossWinner === teamName1 ? 'orange' : '#E61717' }]}
-                        onPress={() => handleSelectTossWinner(teamName1)}
-                    >
-                        <View style={[MatchesStyle.addIconContainer]}>
-                            <Text style={MatchesStyle.tossText}>{teamName1}</Text>
+                <Text style={[MatchesStyle.overHeader, { color: "orange" }]}>Select Team 2</Text>
+                <RNPickerSelect
+                    placeholder={{ label: 'Select Team 2', value: null }}
+                    items={[
+                        { label: 'None', value: null }, // Adding the "None" option for unselecting
+                        ...teams.map(team => ({ label: team.name, value: team })),
+                    ]}
+                    onValueChange={handleSelectTeam2}
+                    style={{
+                        inputAndroid: {
+                            borderColor: '#E61717',
+                            color: colors.text,
+                            padding: 10,
+                            borderRadius: 5,
+                        },
+                        inputIOS: {
+                            borderColor: '#E61717',
+                            color: colors.text,
+                            padding: 10,
+                            borderRadius: 5,
+                        }
+                    }}
+                />
+
+                {/* Toss Winner and Batting First Cards */}
+                {team1 && team2 && (
+                    <>
+                        <Text style={[MatchesStyle.overHeader, { color: "orange" }]}>Who Won the Toss</Text>
+                        <View style={MatchesStyle.overCardContainer}>
+                            <TouchableOpacity
+                                style={[MatchesStyle.tossCard, { borderColor: tossWinner === team1 ? 'orange' : '#E61717' }]}
+                                onPress={() => handleSelectTossWinner(team1)}
+                            >
+                                <View style={[MatchesStyle.addIconContainer]}>
+                                    <Text style={MatchesStyle.tossText}>{team1.name}</Text>
+                                </View>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={[MatchesStyle.tossCard, { borderColor: tossWinner === team2 ? 'orange' : '#E61717' }]}
+                                onPress={() => handleSelectTossWinner(team2)}
+                            >
+                                <View style={[MatchesStyle.addIconContainer]}>
+                                    <Text style={MatchesStyle.tossText}>{team2.name}</Text>
+                                </View>
+                            </TouchableOpacity>
                         </View>
-                    </TouchableOpacity>
 
-                    <TouchableOpacity
-                        style={[MatchesStyle.tossCard, { borderColor: tossWinner === teamName2 ? 'orange' : '#E61717' }]}
-                        onPress={() => handleSelectTossWinner(teamName2)}
-                    >
-                        <View style={[MatchesStyle.addIconContainer]}>
-                            <Text style={MatchesStyle.tossText}>{teamName2}</Text>
+                        <Text style={[MatchesStyle.overHeader, { color: "orange" }]}>Who's Batting First</Text>
+                        <View style={MatchesStyle.overCardContainer}>
+                            <TouchableOpacity
+                                style={[MatchesStyle.battingCard, { borderColor: selectedTeam === team1 ? 'orange' : '#E61717' }]}
+                                onPress={() => handleSelectTeam(team1)}
+                            >
+                                <View style={[MatchesStyle.addIconContainer]}>
+                                    <Text style={MatchesStyle.tossText}>{team1.name}</Text>
+                                </View>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={[MatchesStyle.battingCard, { borderColor: selectedTeam === team2 ? 'orange' : '#E61717' }]}
+                                onPress={() => handleSelectTeam(team2)}
+                            >
+                                <View style={[MatchesStyle.addIconContainer]}>
+                                    <Text style={MatchesStyle.tossText}>{team2.name}</Text>
+                                </View>
+                            </TouchableOpacity>
                         </View>
-                    </TouchableOpacity>
-                </View>
-
-                <Text style={[MatchesStyle.overHeader, { color: "orange" }]}>Who's Batting First</Text>
-
-                <View style={MatchesStyle.overCardContainer}>
-                    <TouchableOpacity
-                        style={[MatchesStyle.battingCard, { borderColor: selectedTeam === teamName1 ? 'orange' : '#E61717' }]}
-                        onPress={() => handleSelectTeam(teamName1)}
-                    >
-                        <View style={[MatchesStyle.addIconContainer]}>
-                            <Text style={MatchesStyle.tossText}>{teamName1}</Text>
-                        </View>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={[MatchesStyle.battingCard, { borderColor: selectedTeam === teamName2 ? 'orange' : '#E61717' }]}
-                        onPress={() => handleSelectTeam(teamName2)}
-                    >
-                        <View style={[MatchesStyle.addIconContainer]}>
-                            <Text style={MatchesStyle.tossText}>{teamName2}</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
+                    </>
+                )}
 
                 <TouchableOpacity
                     style={[MatchesStyle.button, { backgroundColor: isButtonEnabled ? 'red' : 'gray' }]}

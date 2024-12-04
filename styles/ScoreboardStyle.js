@@ -79,13 +79,27 @@ const ScoreboardStyle = StyleSheet.create({
         alignItems: 'center', // Center items vertically
         paddingVertical: hp('1%'), // Add vertical padding
     },
-    batterText: {
+    // batterText: {
+    //     flexDirection: 'column',
+    //     justifyContent: 'center',
+    //     alignItems: 'flex-start',
+    //     paddingVertical: hp('0.3%'), // Add vertical padding
+    //     marginBottom: hp('1%'), // Spacing between rows
+    // },
+    statsHeader: {
         flexDirection: 'row',
-        justifyContent: 'space-between', // Adjust to space elements evenly
-        alignItems: 'center', // Center items vertically
-        paddingVertical: hp('0.3%'), // Add vertical padding
-        bottom: 10,
+        justifyContent: 'space-between',
+        width: '100%',  // Ensure header items span the full width
+        paddingVertical: hp('0.5%'), // Padding between header rows
     },
+    // Row for player/bowler stats
+    statsRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',  // Ensure row items span the full width
+        paddingVertical: hp('0.5%'), // Padding between row items
+    },
+
     crrText: {
         fontSize: wp('5%'),
         fontFamily: 'SignikaNegative-Regular',
@@ -97,51 +111,56 @@ const ScoreboardStyle = StyleSheet.create({
         // fontWeight: 'bold',
         color: '#E61717',
     },
+    batterText: {
+        flexDirection: 'row',
+        justifyContent: 'space-between', // Ensures proper space distribution
+        alignItems: 'center', // Vertically align the items in the center
+        paddingVertical: hp('0.5%'), // Adjusted padding for better spacing
+    },
     batTxtH: {
         fontSize: wp('7%'),
         fontFamily: 'SignikaNegative-Bold',
-        // fontWeight: 'bold',
         marginBottom: hp('3%'),
         top: hp('1.5%'),
         left: wp('3%'),
-        textAlign: 'left', // Ensure left alignment
+        textAlign: 'left', // Align text to the left for headings
     },
     runsH: {
         fontSize: wp('5%'),
+        padding: wp('2.5%'),
         fontFamily: 'SignikaNegative-Bold',
-        // fontWeight: 'bold',
         color: '#E61717',
-        marginHorizontal: wp('2%'), // Uniform horizontal margin
+        // marginHorizontal: wp('2%'), // Consistent horizontal margin
     },
     plyCon: {
         width: wp('40%'),
         height: hp('5%'),
-        backgroundColor: 'orange',
         borderRadius: 12,
-        padding: wp('1%'), // Add padding for better appearance
-        // marginBottom: hp('1%'),
-        left: wp('2%')
+        padding: wp('0.5%'), // Padding for better visual appearance
+        justifyContent: 'center', // Center the name text vertically
+        left: wp('2%'),
     },
     bowlCon: {
         width: wp('40%'),
         height: hp('5%'),
         backgroundColor: 'red',
         borderRadius: 12,
-        padding: wp('1%'), // Add padding for better appearance
-        // marginBottom: hp('1%'),
-        left: wp('2%')
+        padding: wp('0.5%'),
+        left: wp('2%'),
     },
     batTxt: {
         fontSize: wp('6%'),
         fontFamily: 'SignikaNegative-Regular',
-        paddingLeft: wp('1%'), // Consistent padding
-        left: wp('2%')
+        paddingLeft: wp('1%'),
+        color: 'white',
     },
     runs: {
-        fontSize: wp('5%'),
+        fontSize: hp('2.2%'),
+        flexDirection: 'row',
+        paddingVertical: 2,
         fontFamily: 'SignikaNegative-Regular',
         color: '#E61717',
-        marginHorizontal: wp('2%'), // Uniform horizontal margin
+        marginHorizontal: wp('2%'), // Ensure even spacing between stats
     },
     addTxt: {
         position: 'absolute',
@@ -314,6 +333,93 @@ const ScoreboardStyle = StyleSheet.create({
         fontSize: wp('7%'),
         fontFamily: 'SignikaNegative-Bold',
         letterSpacing: 1,
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)', // Semi-transparent black background
+    },
+    modalContent: {
+        backgroundColor: '#fff',
+        padding: hp('3%'),
+        borderRadius: 15,
+        width: wp('85%'),
+        height: hp('65%'),
+    },
+    modalHeader: {
+        fontSize: wp('6%'),
+        fontFamily: 'SignikaNegative-Bold',
+        color: '#E61717',
+        textAlign: 'center',
+        marginBottom: hp('2%'),
+    },
+    teamName: {
+        fontSize: wp('5.5%'),
+        fontFamily: 'SignikaNegative-Bold',
+        textAlign: 'center',
+        marginBottom: hp('2%'),
+        color: '#f79e1b'
+    },
+    selectionContainer: {
+        marginBottom: hp('3%'),
+    },
+    selectionText: {
+        fontSize: wp('5%'),
+        fontFamily: 'SignikaNegative-Regular',
+        marginBottom: hp('1%'),
+        textAlign: 'center',
+    },
+    optionButton: {
+        backgroundColor: '#f0f0f0',
+        paddingVertical: hp('2%'),
+        marginVertical: hp('0.8%'),
+        borderRadius: 10,
+        alignItems: 'center',
+    },
+    optionText: {
+        fontSize: wp('5%'),
+        fontFamily: 'SignikaNegative-Regular',
+        color: '#333',
+    },
+    nextButton: {
+        backgroundColor: '#f79e1b',
+        paddingVertical: hp('2%'),
+        borderRadius: 10,
+        alignItems: 'center',
+        marginTop: hp('3%'),
+    },
+    nextButtonText: {
+        fontSize: wp('6%'),
+        fontFamily: 'SignikaNegative-Bold',
+        color: 'white',
+    },
+    picker: {
+        width: '100%',
+        height: 40,
+        borderColor: 'black',
+        borderWidth: 1,
+        borderRadius: 5,
+        marginBottom: 20,
+        paddingLeft: 10,
+        color: 'black',
+    },
+    radioButton: {
+        width: wp('6%'),
+        height: hp('3%'),
+        borderRadius: 15,
+        borderWidth: 2,
+        borderColor: '#ccc',
+        justifyContent: 'center',
+        alignItems: 'center',
+        // marginRight: 10,
+    },
+    selectedButton: {
+        borderColor: 'blue', // Highlight selected button
+    },
+    radioButtonText: {
+        fontSize: 14,
+        color: 'blue',
     },
 });
 

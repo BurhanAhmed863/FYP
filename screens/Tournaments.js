@@ -51,7 +51,7 @@ const Tournaments = () => {
             <View style={MatchesStyle.addCardContainer}>
                 <View style={MatchesStyle.centeredContent}>
 
-                    <TouchableOpacity >
+                    <TouchableOpacity onPress={() => (navigation.navigate('TournamentDetail'))}>
                         <LinearGradient
                             colors={['#FEC570', '#F7A01F']} // Define your gradient colors
                             start={{ x: 1, y: 0 }} // Optional: starting point of the gradient
@@ -79,7 +79,7 @@ const Tournaments = () => {
                         </LinearGradient>
                     </TouchableOpacity>
                     <Text style={[MatchesStyle.ongoingTxt, { color: colors.text }]}>New Tournament</Text>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress= {() => (navigation.navigate('TournamentResultsScreen'))}>
                         <LinearGradient
                             colors={['#FEC570', '#F7A01F']} // Define your gradient colors
                             start={{ x: 1, y: 0 }} // Optional: starting point of the gradient

@@ -38,6 +38,8 @@ const EnterPlayersStyle = StyleSheet.create({
     },
     welTxt: {
         fontSize: wp('7%'), // Responsive font size
+        marginBottom: hp('2%'),
+        bottom: hp('0.3%'),
         // fontWeight: 'bold',
         fontFamily: 'SignikaNegative-Bold',
         letterSpacing: wp('0.2%'), // Responsive
@@ -83,8 +85,8 @@ const EnterPlayersStyle = StyleSheet.create({
         borderRadius: 10,
         padding: wp('1%'), // Responsive padding
         width: wp('90%'), // Responsive width
-        borderColor: "orange",
-        marginBottom: hp('1%'),
+        borderColor: 'orange',
+        marginBottom: hp('3%'),
     },
     inputIcon: {
         width: wp('9%'), // Responsive width for icon
@@ -104,6 +106,7 @@ const EnterPlayersStyle = StyleSheet.create({
         padding: hp('2.5%'), // Responsive padding
         width: wp('90%'), // Responsive width
         alignItems: 'center',
+        bottom: hp('3%')
     },
     buttonText: {
         fontSize: wp('7%'), // Responsive font size
