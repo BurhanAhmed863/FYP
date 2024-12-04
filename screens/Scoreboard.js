@@ -500,17 +500,6 @@ const Scoreboard = ({ route }) => {
                                 // console.log('ball No', legalBallsInOver)
                                 setCurrentOverAndBallForFirstInnings(newOvers + '.' + legalBallsInOver);
                             }
-                            if (innings == 2) {
-
-                                // console.log('Extra Type', isExtraType)
-                                // console.log('Over No', currentOver)
-                                ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                runsInOver.push(runs); // Store the runs for the legal ball
-                                legalBallsInOver++; // Increment only for legal balls
-                                // console.log('ball No', legalBallsInOver)
-                                setCurrentOverAndBallForSecondInnings(newOvers + '.' + legalBallsInOver);
-                            }
                         }
                         if (legalBallsInOver === 5 || isWicket) {
                             if (innings == 1) {
@@ -520,16 +509,6 @@ const Scoreboard = ({ route }) => {
                                 legalBallsInOver++; // Increment only for legal balls
                                 // console.log('ball No', legalBallsInOver)
                                 setCurrentOverAndBallForFirstInnings(newOvers + '.' + legalBallsInOver);
-                                // console.log('ball by ball', (newOvers - 1) + '.' + (legalBallsInOver + 1))
-                            }
-                            if (innings == 2) {
-
-                                ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                runsInOver.push(runs); // Store the runs for the legal ball
-                                legalBallsInOver++; // Increment only for legal balls
-                                // console.log('ball No', legalBallsInOver)
-                                setCurrentOverAndBallForSecondInnings(newOvers + '.' + legalBallsInOver);
                                 // console.log('ball by ball', (newOvers - 1) + '.' + (legalBallsInOver + 1))
                             }
                         }
@@ -606,13 +585,6 @@ const Scoreboard = ({ route }) => {
                                     prevBowler.wides += 1;
                                     setCurrentOverAndBallForFirstInnings(newOvers + '.' + legalBallsInOver);
                                 }
-                                if (innings == 2) {
-                                    // For a wide ball, keep the same decimal for the ball number (e.g., 0.3, 1.3, etc.)
-                                    ballsInOver.push(newOvers + '.' + (ballsInCurrentOver + 1)); // Example: 0.3
-                                    runsInOver.push(extraRuns); // Store the runs for wide (e.g., +2 for wide)
-                                    prevBowler.wides += 1;
-                                    setCurrentOverAndBallForSecondInnings(newOvers + '.' + legalBallsInOver);
-                                }
                             } else if (isExtraType === 'NoBall') {
                                 if (innings == 1) {
                                     // For a no-ball, keep the same decimal for the ball number (e.g., 0.3, 1.3, etc.)
@@ -620,14 +592,6 @@ const Scoreboard = ({ route }) => {
                                     runsInOver.push(extraRuns); // Store the runs for no-ball (e.g., +1 for no-ball)
                                     prevBowler.noball += 1;
                                     setCurrentOverAndBallForFirstInnings(newOvers + '.' + legalBallsInOver);
-                                }
-                                if (innings == 2) {
-
-                                    // For a no-ball, keep the same decimal for the ball number (e.g., 0.3, 1.3, etc.)
-                                    ballsInOver.push(newOvers + '.' + (ballsInCurrentOver + 1)); // Example: 0.3
-                                    runsInOver.push(extraRuns); // Store the runs for no-ball (e.g., +1 for no-ball)
-                                    prevBowler.noball += 1;
-                                    setCurrentOverAndBallForSecondInnings(newOvers + '.' + legalBallsInOver);
                                 }
                             }
                         } else {
@@ -659,20 +623,6 @@ const Scoreboard = ({ route }) => {
                                         dismissedBatsmen1Ref.current = 0;  // Mark batsman 1 as dismissed
                                         dismissedBatsmen2Ref.current = 0;  // Mark batsman 1 as dismissed
                                     }
-                                    if (innings == 2) {
-                                        // console.log('Over No', currentOver)
-                                        ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                        // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                        runsInOver.push(runs); // Store the runs for the legal ball
-                                        legalBallsInOver++; // Increment only for legal balls
-                                        // console.log('ball No', legalBallsInOver)
-                                        setCurrentOverAndBallForSecondInnings(newOvers + '.' + legalBallsInOver);
-                                        sendBatsmenDataToBackend(overNumber);
-                                        dismissedBatsmen1Ref.current = 0;  // Mark batsman 1 as dismissed
-                                        dismissedBatsmen2Ref.current = 0;  // Mark batsman 1 as dismissed
-
-                                    }
-
                                 }
                                 else {
                                     if (innings == 1) {
@@ -683,18 +633,6 @@ const Scoreboard = ({ route }) => {
                                         legalBallsInOver++; // Increment only for legal balls
                                         // console.log('ball No', legalBallsInOver)
                                         setCurrentOverAndBallForFirstInnings(newOvers + '.' + legalBallsInOver);
-                                        wicket = wicket + 1;
-                                        // console.log('WC', wicket)
-                                    }
-                                    if (innings == 2) {
-
-                                        // console.log('Over No', currentOver)
-                                        ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                        // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                        runsInOver.push(runs); // Store the runs for the legal ball
-                                        legalBallsInOver++; // Increment only for legal balls
-                                        // console.log('ball No', legalBallsInOver)
-                                        setCurrentOverAndBallForSecondInnings(newOvers + '.' + legalBallsInOver);
                                         wicket = wicket + 1;
                                         // console.log('WC', wicket)
                                     }
@@ -724,18 +662,6 @@ const Scoreboard = ({ route }) => {
                                         dismissedBatsmen1Ref.current = 0;  // Mark batsman 1 as dismissed
                                         dismissedBatsmen2Ref.current = 0;  // Mark batsman 1 as dismissed
                                     }
-                                    if (innings == 2) {
-
-                                        ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                        // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                        runsInOver.push(runs); // Store the runs for the legal ball
-                                        legalBallsInOver++; // Increment only for legal balls
-                                        // console.log('ball No', legalBallsInOver)
-                                        setCurrentOverAndBallForSecondInnings(newOvers + 1);
-                                        sendBatsmenDataToBackend(overNumber);
-                                        dismissedBatsmen1Ref.current = 0;  // Mark batsman 1 as dismissed
-                                        dismissedBatsmen2Ref.current = 0;  // Mark batsman 1 as dismissed
-                                    }
                                 }
                                 if (innings == 1) {
                                     ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
@@ -746,16 +672,6 @@ const Scoreboard = ({ route }) => {
                                     setCurrentOverAndBallForFirstInnings(newOvers + 1);
                                     // console.log('ball by ball', (newOvers - 1) + '.' + (legalBallsInOver + 1))
 
-                                }
-                                if (innings == 2) {
-
-                                    ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                    // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                    runsInOver.push(runs); // Store the runs for the legal ball
-                                    legalBallsInOver++; // Increment only for legal balls
-                                    // console.log('ball No', legalBallsInOver)
-                                    setCurrentOverAndBallForSecondInnings(newOvers + 1);
-                                    // console.log('ball by ball', (newOvers - 1) + '.' + (legalBallsInOver + 1))
                                 }
                             }
                         }
@@ -807,14 +723,6 @@ const Scoreboard = ({ route }) => {
                                 updatedBowler.wicket += 1;
                                 let wicketCount = wicket + 1;
                                 setTotalWicketsInFirstInnings(wicketCount)
-                            }
-                        }
-                        if (innings == 2) {
-                            let wicket = totalWicketsInSecondInnings;
-                            if (isWicket) {
-                                updatedBowler.wicket += 1;
-                                let wicketCount = wicket + 1;
-                                setTotalWicketsInSecondInnings(wicketCount)
                             }
                         }
 
@@ -891,310 +799,6 @@ const Scoreboard = ({ route }) => {
 
                     return updatedBowler;
                 }
-                if (innings == 2) {
-                    if (isExtraType !== 'LegByes' || isExtra !== 'Byes' || isWicket) {
-                        let newBalls = isExtra ? currentBalls : currentBalls + 1;
-                        let newOvers = Math.floor(newBalls / 6) + currentOver;
-                        const isOverComplete = newBalls === 6;
-                        let ballsInCurrentOver = newBalls % 6;
-
-                        // Handling extra types like Wide or NoBall
-                        if (isExtra) {
-                            if (isExtraType === 'Wide') {
-                                if (innings == 1) {
-                                    // For a wide ball, keep the same decimal for the ball number (e.g., 0.3, 1.3, etc.)
-                                    ballsInOver.push(newOvers + '.' + (ballsInCurrentOver + 1)); // Example: 0.3
-                                    runsInOver.push(extraRuns); // Store the runs for wide (e.g., +2 for wide)
-                                    prevBowler.wides += 1;
-                                    setCurrentOverAndBallForFirstInnings(newOvers + '.' + legalBallsInOver);
-                                }
-                                if (innings == 2) {
-
-                                    // For a wide ball, keep the same decimal for the ball number (e.g., 0.3, 1.3, etc.)
-                                    ballsInOver.push(newOvers + '.' + (ballsInCurrentOver + 1)); // Example: 0.3
-                                    runsInOver.push(extraRuns); // Store the runs for wide (e.g., +2 for wide)
-                                    prevBowler.wides += 1;
-                                    setCurrentOverAndBallForSecondInnings(newOvers + '.' + legalBallsInOver);
-                                }
-                            } else if (isExtraType === 'NoBall') {
-                                if (innings == 1) {
-                                    // For a no-ball, keep the same decimal for the ball number (e.g., 0.3, 1.3, etc.)
-                                    ballsInOver.push(newOvers + '.' + (ballsInCurrentOver + 1)); // Example: 0.3
-                                    runsInOver.push(extraRuns); // Store the runs for no-ball (e.g., +1 for no-ball)
-                                    prevBowler.noball += 1;
-                                    setCurrentOverAndBallForFirstInnings(newOvers + '.' + legalBallsInOver);
-                                }
-                                if (innings == 2) {
-
-                                    // For a no-ball, keep the same decimal for the ball number (e.g., 0.3, 1.3, etc.)
-                                    ballsInOver.push(newOvers + '.' + (ballsInCurrentOver + 1)); // Example: 0.3
-                                    runsInOver.push(extraRuns); // Store the runs for no-ball (e.g., +1 for no-ball)
-                                    prevBowler.noball += 1;
-                                    setCurrentOverAndBallForSecondInnings(newOvers + '.' + legalBallsInOver);
-                                }
-                            }
-                        } else {
-                            // Record the legal ball (increment legal balls)'
-                            if (legalBallsInOver <= 4) {
-                                if (isWicket) {
-                                    if (selectedBatsman.name === selectedBatsman1.name) {
-                                        dismissedBatsmen1Ref.current = 1;  // Mark batsman 1 as dismissed
-                                        dismissedBatsmenIds.current.push(selectedBatsman1.id);
-                                        setPrevBatsman(selectedBatsman1);
-                                        // console.log(' batsman 1 id (immediate): ', selectedBatsman1.id);
-                                        // console.log('dismissed batsman 1 (immediate): ', dismissedBatsmen1Ref.current);
-                                    } else if (selectedBatsman.name === selectedBatsman2.name) {
-                                        dismissedBatsmen2Ref.current = 1;  // Mark batsman 2 as dismissed
-                                        dismissedBatsmenIds.current.push(selectedBatsman2.id);
-                                        setPrevBatsman(selectedBatsman2);
-                                        // console.log(' batsman 1 id (immediate): ', selectedBatsman2.id);
-                                        // console.log('dismissed batsman 2 (immediate): ', dismissedBatsmen2Ref.current);
-                                    }
-                                    if (innings == 1) {
-                                        // console.log('Over No', currentOver)
-                                        ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                        // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                        runsInOver.push(runs); // Store the runs for the legal ball
-                                        legalBallsInOver++; // Increment only for legal balls
-                                        // console.log('ball No', legalBallsInOver)
-                                        setCurrentOverAndBallForFirstInnings(newOvers + '.' + legalBallsInOver);
-                                        sendBatsmenDataToBackend(overNumber);
-                                        dismissedBatsmen1Ref.current = 0;  // Mark batsman 1 as dismissed
-                                        dismissedBatsmen2Ref.current = 0;  // Mark batsman 1 as dismissed
-                                    }
-                                    if (innings == 2) {
-                                        // console.log('Over No', currentOver)
-                                        ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                        // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                        runsInOver.push(runs); // Store the runs for the legal ball
-                                        legalBallsInOver++; // Increment only for legal balls
-                                        // console.log('ball No', legalBallsInOver)
-                                        setCurrentOverAndBallForSecondInnings(newOvers + '.' + legalBallsInOver);
-                                        sendBatsmenDataToBackend(overNumber);
-                                        dismissedBatsmen1Ref.current = 0;  // Mark batsman 1 as dismissed
-                                        dismissedBatsmen2Ref.current = 0;  // Mark batsman 1 as dismissed
-
-                                    }
-
-                                }
-                                else {
-                                    if (innings == 1) {
-                                        // console.log('Over No', currentOver)
-                                        ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                        // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                        runsInOver.push(runs); // Store the runs for the legal ball
-                                        legalBallsInOver++; // Increment only for legal balls
-                                        // console.log('ball No', legalBallsInOver)
-                                        setCurrentOverAndBallForFirstInnings(newOvers + '.' + legalBallsInOver);
-                                        wicket = wicket + 1;
-                                        // console.log('WC', wicket)
-                                    }
-                                    if (innings == 2) {
-
-                                        // console.log('Over No', currentOver)
-                                        ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                        // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                        runsInOver.push(runs); // Store the runs for the legal ball
-                                        legalBallsInOver++; // Increment only for legal balls
-                                        // console.log('ball No', legalBallsInOver)
-                                        setCurrentOverAndBallForSecondInnings(newOvers + '.' + legalBallsInOver);
-                                        wicket = wicket + 1;
-                                        // console.log('WC', wicket)
-                                    }
-                                }
-                            }
-                            if (legalBallsInOver === 5) {
-                                if (isWicket) {
-                                    if (selectedBatsman.name === selectedBatsman1.name) {
-                                        dismissedBatsmen1Ref.current = 1;  // Mark batsman 1 as dismissed
-                                        dismissedBatsmenIds.current.push(selectedBatsman1.id);
-                                        // console.log(' batsman 1 id (immediate): ', selectedBatsman1.id);
-                                        // console.log('dismissed batsman 1 (immediate): ', dismissedBatsmen1Ref.current);
-                                    } else if (selectedBatsman.name === selectedBatsman2.name) {
-                                        dismissedBatsmen2Ref.current = 1;  // Mark batsman 2 as dismissed
-                                        dismissedBatsmenIds.current.push(selectedBatsman2.id);
-                                        // console.log(' batsman 2 id (immediate): ', selectedBatsman2.id);
-                                        // console.log('dismissed batsman 2 (immediate): ', dismissedBatsmen2Ref.current);
-                                    }
-                                    if (innings == 1) {
-                                        ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                        // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                        runsInOver.push(runs); // Store the runs for the legal ball
-                                        legalBallsInOver++; // Increment only for legal balls
-                                        // console.log('ball No', legalBallsInOver)
-                                        setCurrentOverAndBallForFirstInnings(newOvers + 1);
-                                        sendBatsmenDataToBackend(overNumber);
-                                        dismissedBatsmen1Ref.current = 0;  // Mark batsman 1 as dismissed
-                                        dismissedBatsmen2Ref.current = 0;  // Mark batsman 1 as dismissed
-                                    }
-                                    if (innings == 2) {
-
-                                        ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                        // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                        runsInOver.push(runs); // Store the runs for the legal ball
-                                        legalBallsInOver++; // Increment only for legal balls
-                                        // console.log('ball No', legalBallsInOver)
-                                        setCurrentOverAndBallForSecondInnings(newOvers + 1);
-                                        sendBatsmenDataToBackend(overNumber);
-                                        dismissedBatsmen1Ref.current = 0;  // Mark batsman 1 as dismissed
-                                        dismissedBatsmen2Ref.current = 0;  // Mark batsman 1 as dismissed
-                                    }
-                                }
-                                if (innings == 1) {
-                                    ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                    // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                    runsInOver.push(runs); // Store the runs for the legal ball
-                                    legalBallsInOver++; // Increment only for legal balls
-                                    // console.log('ball No', legalBallsInOver)
-                                    setCurrentOverAndBallForFirstInnings(newOvers + 1);
-                                    // console.log('ball by ball', (newOvers - 1) + '.' + (legalBallsInOver + 1))
-
-                                }
-                                if (innings == 2) {
-
-                                    ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                    // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                    runsInOver.push(runs); // Store the runs for the legal ball
-                                    legalBallsInOver++; // Increment only for legal balls
-                                    // console.log('ball No', legalBallsInOver)
-                                    setCurrentOverAndBallForSecondInnings(newOvers + 1);
-                                    // console.log('ball by ball', (newOvers - 1) + '.' + (legalBallsInOver + 1))
-                                }
-                            }
-                        }
-
-                        if (isOverComplete || (isOverComplete && isWicket)) {
-                            let runsInCurrentOver = prevBowler.runs + runs; // Update runs in the over
-                            const totalBalls = ballsInOver.length;
-                            handleOverCompletion(prevBowler);
-                            const overNumber = newOvers + (ballsInCurrentOver / 10); // Over number in decimal form (e.g., 1.3)
-                            // console.log('overNumber', overNumber)
-                            // Switch batsman after over completion
-                            setSelectedBatsman(
-                                selectedBatsman.name === selectedBatsman1.name ? selectedBatsman2 : selectedBatsman1
-                            );
-
-                            addOverDetails(ballsInOver, runsInCurrentOver, overNumber);
-                            saveMatchDataToBackend(overNumber, ballsInOver, totalBalls, runsInOver);
-                            sendBatsmenDataToBackend(overNumber);
-                            newBalls = 0;
-                            legalBallsInOver = 0; // Reset after over completion
-                            // newOvers += 1;
-                            setCurrentOver(newOvers);
-                            // setCurrentOver(newOvers);
-                        }
-
-                        let oversInDecimal = newOvers + ballsInCurrentOver / 10;
-                        oversInDecimal = Math.round(oversInDecimal * 10) / 10;
-
-                        // Update bowler stats
-                        const updatedBowler = {
-                            ...prevBowler,
-                            balls: newBalls,
-                            overs: oversInDecimal,
-                            runs: prevBowler.runs + runs, // Add runs to bowler's total only if valid runs
-                            ballsInOver: ballsInOver, // Store balls in the over array
-                            runsInOver: runsInOver, // Store runs for each ball
-                            legalBallsInOver: legalBallsInOver, // Track the legal balls in the over
-                        };
-
-                        // Extras are recorded separately
-                        if (isExtra) {
-                            updatedBowler.extras += extraRuns;
-                        }
-
-                        // Update wickets if applicable
-                        if (innings == 1) {
-                            let wicket = totalWicketsInFirstInnings;
-                            if (isWicket) {
-                                updatedBowler.wicket += 1;
-                                let wicketCount = wicket + 1;
-                                setTotalWicketsInFirstInnings(wicketCount)
-                            }
-                        }
-                        if (innings == 2) {
-                            let wicket = totalWicketsInSecondInnings;
-                            if (isWicket) {
-                                updatedBowler.wicket += 1;
-                                let wicketCount = wicket + 1;
-                                setTotalWicketsInSecondInnings(wicketCount)
-                            }
-                        }
-
-                        let economyRate = 0;
-                        if (updatedBowler.overs > 0) {
-                            economyRate = updatedBowler.runs / updatedBowler.overs;
-                        }
-
-                        updatedBowler.economy = economyRate; // Store the economy rate in the bowler stats
-                        // console.log('ER', economyRate);
-
-                        return updatedBowler;
-                    }
-
-                    // Increment balls count unless it's a wide or no-ball
-                    let newBalls = isExtra ? currentBalls + 1 : currentBalls;
-                    // console.log('Type of Extra', isExtra, isExtraType)
-
-                    // Calculate overs based on new balls count
-                    const isOverComplete = newBalls === 6;
-                    let newOvers = Math.floor(newBalls / 6);
-                    let ballsInCurrentOver = newBalls % 6;
-
-                    if (isOverComplete) {
-                        let ballInOver = [];
-                        let runsPerBall = [];
-                        handleOverCompletion(prevBowler);
-                        const overNumber = newOvers + (ballsInCurrentOver / 10); // over number in decimal form (e.g., 1.3)
-                        setSelectedBatsman(
-                            selectedBatsman.name === selectedBatsman1.name ? selectedBatsman2 : selectedBatsman1
-                        );
-                        const runsInCurrentOver = prevBowler.runs + runs; // Update runs in the over
-                        // const ballInOver = `${newOvers}.${ballsInCurrentOver + 1}`;
-                        for (let i = 1; i <= 6; i++) {
-                            ballInOver.push(`${newOvers - 1}.${i}`);
-                            runsPerBall.push(runs);
-                            // console.log('ballInOver', ballInOver);
-                            // console.log('runsPerBall', runsPerBall);
-                        }
-                        const totalBalls = ballInOver.length;
-                        addOverDetails(ballInOver, runsInCurrentOver, overNumber);
-                        saveMatchDataToBackend(overNumber, ballInOver, totalBalls, runsPerBall);
-                        newBalls = 0;
-                        newOvers += 1;
-                    }
-
-                    let oversInDecimal = newOvers + ballsInCurrentOver / 10;
-                    oversInDecimal = Math.round(oversInDecimal * 10) / 10;
-
-                    // Update bowler stats
-                    const updatedBowler = {
-                        ...prevBowler,
-                        balls: newBalls,
-                        overs: oversInDecimal,
-                        runs: prevBowler.runs + runs, // Add runs to bowler's total only if valid runs
-                    };
-
-                    // Extras are recorded separately
-                    if (isExtra) {
-                        updatedBowler.extras += extraRuns;
-                    }
-
-                    // Update wickets if applicable
-                    if (isWicket) {
-                        updatedBowler.wicket += 1;
-                    }
-
-                    let economyRate = 0;
-                    if (updatedBowler.overs > 0) {
-                        economyRate = updatedBowler.runs / updatedBowler.overs;
-                    }
-
-                    updatedBowler.economy = economyRate; // Store the economy rate in the bowler stats
-
-                    return updatedBowler;
-                }
-
             }
         });
     };
@@ -1244,16 +848,6 @@ const Scoreboard = ({ route }) => {
                     // Handling extra types like Wide or NoBall
                     if (isExtra || isWicket) {
                         if (legalBallsInOver <= 4) {
-                            if (innings == 1) {
-                                // console.log('Extra Type', isExtraType)
-                                // console.log('Over No', currentOver)
-                                ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                runsInOver.push(runs); // Store the runs for the legal ball
-                                legalBallsInOver++; // Increment only for legal balls
-                                // console.log('ball No', legalBallsInOver)
-                                setCurrentOverAndBallForFirstInnings(newOvers + '.' + legalBallsInOver);
-                            }
                             if (innings == 2) {
 
                                 // console.log('Extra Type', isExtraType)
@@ -1267,15 +861,6 @@ const Scoreboard = ({ route }) => {
                             }
                         }
                         if (legalBallsInOver === 5 || isWicket) {
-                            if (innings == 1) {
-                                ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                runsInOver.push(runs); // Store the runs for the legal ball
-                                legalBallsInOver++; // Increment only for legal balls
-                                // console.log('ball No', legalBallsInOver)
-                                setCurrentOverAndBallForFirstInnings(newOvers + '.' + legalBallsInOver);
-                                // console.log('ball by ball', (newOvers - 1) + '.' + (legalBallsInOver + 1))
-                            }
                             if (innings == 2) {
 
                                 ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
@@ -1343,308 +928,7 @@ const Scoreboard = ({ route }) => {
 
                     return updatedBowler;
                 }
-                if (innings == 1) {
-                    if (isExtraType !== 'LegByes' || isExtra !== 'Byes' || isWicket) {
-                        let newBalls = isExtra ? currentBalls : currentBalls + 1;
-                        let newOvers = Math.floor(newBalls / 6) + currentOver2ndInnings;
-                        const isOverComplete = newBalls === 6;
-                        let ballsInCurrentOver = newBalls % 6;
-
-                        // Handling extra types like Wide or NoBall
-                        if (isExtra) {
-                            if (isExtraType === 'Wide') {
-                                if (innings == 1) {
-                                    // For a wide ball, keep the same decimal for the ball number (e.g., 0.3, 1.3, etc.)
-                                    ballsInOver.push(newOvers + '.' + (ballsInCurrentOver + 1)); // Example: 0.3
-                                    runsInOver.push(extraRuns); // Store the runs for wide (e.g., +2 for wide)
-                                    prevBowler2ndInnings.wides += 1;
-                                    setCurrentOverAndBallForFirstInnings(newOvers + '.' + legalBallsInOver);
-                                }
-                                if (innings == 2) {
-                                    // For a wide ball, keep the same decimal for the ball number (e.g., 0.3, 1.3, etc.)
-                                    ballsInOver.push(newOvers + '.' + (ballsInCurrentOver + 1)); // Example: 0.3
-                                    runsInOver.push(extraRuns); // Store the runs for wide (e.g., +2 for wide)
-                                    prevBowler2ndInnings.wides += 1;
-                                    setCurrentOverAndBallForSecondInnings(newOvers + '.' + legalBallsInOver);
-                                }
-                            } else if (isExtraType === 'NoBall') {
-                                if (innings == 1) {
-                                    // For a no-ball, keep the same decimal for the ball number (e.g., 0.3, 1.3, etc.)
-                                    ballsInOver.push(newOvers + '.' + (ballsInCurrentOver + 1)); // Example: 0.3
-                                    runsInOver.push(extraRuns); // Store the runs for no-ball (e.g., +1 for no-ball)
-                                    prevBowler2ndInnings.noball += 1;
-                                    setCurrentOverAndBallForFirstInnings(newOvers + '.' + legalBallsInOver);
-                                }
-                                if (innings == 2) {
-
-                                    // For a no-ball, keep the same decimal for the ball number (e.g., 0.3, 1.3, etc.)
-                                    ballsInOver.push(newOvers + '.' + (ballsInCurrentOver + 1)); // Example: 0.3
-                                    runsInOver.push(extraRuns); // Store the runs for no-ball (e.g., +1 for no-ball)
-                                    prevBowler2ndInnings.noball += 1;
-                                    setCurrentOverAndBallForSecondInnings(newOvers + '.' + legalBallsInOver);
-                                }
-                            }
-                        } else {
-                            // Record the legal ball (increment legal balls)'
-                            if (legalBallsInOver <= 4) {
-                                if (isWicket) {
-                                    if (selectedBatsman.name === selectedBatsman1.name) {
-                                        dismissedBatsmen1Ref.current = 1;  // Mark batsman 1 as dismissed
-                                        dismissedBatsmenIds.current.push(selectedBatsman1.id);
-                                        setPrevBatsman(selectedBatsman1);
-                                        // console.log(' batsman 1 id (immediate): ', selectedBatsman1.id);
-                                        // console.log('dismissed batsman 1 (immediate): ', dismissedBatsmen1Ref.current);
-                                    } else if (selectedBatsman.name === selectedBatsman2.name) {
-                                        dismissedBatsmen2Ref.current = 1;  // Mark batsman 2 as dismissed
-                                        dismissedBatsmenIds.current.push(selectedBatsman2.id);
-                                        setPrevBatsman(selectedBatsman2);
-                                        // console.log(' batsman 1 id (immediate): ', selectedBatsman2.id);
-                                        // console.log('dismissed batsman 2 (immediate): ', dismissedBatsmen2Ref.current);
-                                    }
-                                    if (innings == 1) {
-                                        // console.log('Over No', currentOver)
-                                        ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                        // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                        runsInOver.push(runs); // Store the runs for the legal ball
-                                        legalBallsInOver++; // Increment only for legal balls
-                                        // console.log('ball No', legalBallsInOver)
-                                        setCurrentOverAndBallForFirstInnings(newOvers + '.' + legalBallsInOver);
-                                        sendBatsmenDataToBackend(overNumber);
-                                        dismissedBatsmen1Ref.current = 0;  // Mark batsman 1 as dismissed
-                                        dismissedBatsmen2Ref.current = 0;  // Mark batsman 1 as dismissed
-                                    }
-                                    if (innings == 2) {
-                                        // console.log('Over No', currentOver)
-                                        ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                        // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                        runsInOver.push(runs); // Store the runs for the legal ball
-                                        legalBallsInOver++; // Increment only for legal balls
-                                        // console.log('ball No', legalBallsInOver)
-                                        setCurrentOverAndBallForSecondInnings(newOvers + '.' + legalBallsInOver);
-                                        sendBatsmenDataToBackend(overNumber);
-                                        dismissedBatsmen1Ref.current = 0;  // Mark batsman 1 as dismissed
-                                        dismissedBatsmen2Ref.current = 0;  // Mark batsman 1 as dismissed
-
-                                    }
-
-                                }
-                                else {
-                                    if (innings == 1) {
-                                        // console.log('Over No', currentOver)
-                                        ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                        // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                        runsInOver.push(runs); // Store the runs for the legal ball
-                                        legalBallsInOver++; // Increment only for legal balls
-                                        // console.log('ball No', legalBallsInOver)
-                                        setCurrentOverAndBallForFirstInnings(newOvers + '.' + legalBallsInOver);
-                                        wicket = wicket + 1;
-                                        // console.log('WC', wicket)
-                                    }
-                                    if (innings == 2) {
-
-                                        // console.log('Over No', currentOver)
-                                        ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                        // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                        runsInOver.push(runs); // Store the runs for the legal ball
-                                        legalBallsInOver++; // Increment only for legal balls
-                                        // console.log('ball No', legalBallsInOver)
-                                        setCurrentOverAndBallForSecondInnings(newOvers + '.' + legalBallsInOver);
-                                        wicket = wicket + 1;
-                                        // console.log('WC', wicket)
-                                    }
-                                }
-                            }
-                            if (legalBallsInOver === 5) {
-                                if (isWicket) {
-                                    if (selectedBatsman.name === selectedBatsman1.name) {
-                                        dismissedBatsmen1Ref.current = 1;  // Mark batsman 1 as dismissed
-                                        dismissedBatsmenIds.current.push(selectedBatsman1.id);
-                                        // console.log(' batsman 1 id (immediate): ', selectedBatsman1.id);
-                                        // console.log('dismissed batsman 1 (immediate): ', dismissedBatsmen1Ref.current);
-                                    } else if (selectedBatsman.name === selectedBatsman2.name) {
-                                        dismissedBatsmen2Ref.current = 1;  // Mark batsman 2 as dismissed
-                                        dismissedBatsmenIds.current.push(selectedBatsman2.id);
-                                        // console.log(' batsman 2 id (immediate): ', selectedBatsman2.id);
-                                        // console.log('dismissed batsman 2 (immediate): ', dismissedBatsmen2Ref.current);
-                                    }
-                                    if (innings == 1) {
-                                        ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                        // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                        runsInOver.push(runs); // Store the runs for the legal ball
-                                        legalBallsInOver++; // Increment only for legal balls
-                                        // console.log('ball No', legalBallsInOver)
-                                        setCurrentOverAndBallForFirstInnings(newOvers + 1);
-                                        sendBatsmenDataToBackend(overNumber);
-                                        dismissedBatsmen1Ref.current = 0;  // Mark batsman 1 as dismissed
-                                        dismissedBatsmen2Ref.current = 0;  // Mark batsman 1 as dismissed
-                                    }
-                                    if (innings == 2) {
-
-                                        ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                        // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                        runsInOver.push(runs); // Store the runs for the legal ball
-                                        legalBallsInOver++; // Increment only for legal balls
-                                        // console.log('ball No', legalBallsInOver)
-                                        setCurrentOverAndBallForSecondInnings(newOvers + 1);
-                                        sendBatsmenDataToBackend(overNumber);
-                                        dismissedBatsmen1Ref.current = 0;  // Mark batsman 1 as dismissed
-                                        dismissedBatsmen2Ref.current = 0;  // Mark batsman 1 as dismissed
-                                    }
-                                }
-                                if (innings == 1) {
-                                    ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                    // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                    runsInOver.push(runs); // Store the runs for the legal ball
-                                    legalBallsInOver++; // Increment only for legal balls
-                                    // console.log('ball No', legalBallsInOver)
-                                    setCurrentOverAndBallForFirstInnings(newOvers + 1);
-                                    // console.log('ball by ball', (newOvers - 1) + '.' + (legalBallsInOver + 1))
-
-                                }
-                                if (innings == 2) {
-
-                                    ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                    // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                    runsInOver.push(runs); // Store the runs for the legal ball
-                                    legalBallsInOver++; // Increment only for legal balls
-                                    // console.log('ball No', legalBallsInOver)
-                                    setCurrentOverAndBallForSecondInnings(newOvers + 1);
-                                    // console.log('ball by ball', (newOvers - 1) + '.' + (legalBallsInOver + 1))
-                                }
-                            }
-                        }
-
-                        if (isOverComplete || (isOverComplete && isWicket)) {
-                            let runsInCurrentOver = prevBowler2ndInnings.runs + runs; // Update runs in the over
-                            const totalBalls = ballsInOver.length;
-                            handleOverCompletion(prevBowler2ndInnings);
-                            const overNumber = newOvers + (ballsInCurrentOver / 10); // Over number in decimal form (e.g., 1.3)
-                            // console.log('overNumber', overNumber)
-                            // Switch batsman after over completion
-                            setSelectedBatsman(
-                                selectedBatsman.name === selectedBatsman1.name ? selectedBatsman2 : selectedBatsman1
-                            );
-
-                            addOverDetails(ballsInOver, runsInCurrentOver, overNumber);
-                            saveMatchDataToBackend(overNumber, ballsInOver, totalBalls, runsInOver);
-                            sendBatsmenDataToBackend(overNumber);
-                            newBalls = 0;
-                            legalBallsInOver = 0; // Reset after over completion
-                            // newOvers += 1;
-                            setCurrentOver2ndInnings(newOvers);
-                            // setCurrentOver2ndInnings(newOvers);
-                        }
-
-                        let oversInDecimal = newOvers + ballsInCurrentOver / 10;
-                        oversInDecimal = Math.round(oversInDecimal * 10) / 10;
-
-                        // Update bowler stats
-                        const updatedBowler = {
-                            ...prevBowler2ndInnings,
-                            balls: newBalls,
-                            overs: oversInDecimal,
-                            runs: prevBowler2ndInnings.runs + runs, // Add runs to bowler's total only if valid runs
-                            ballsInOver: ballsInOver, // Store balls in the over array
-                            runsInOver: runsInOver, // Store runs for each ball
-                            legalBallsInOver: legalBallsInOver, // Track the legal balls in the over
-                        };
-
-                        // Extras are recorded separately
-                        if (isExtra) {
-                            updatedBowler.extras += extraRuns;
-                        }
-
-                        // Update wickets if applicable
-                        if (innings == 1) {
-                            let wicket = totalWicketsInFirstInnings;
-                            if (isWicket) {
-                                updatedBowler.wicket += 1;
-                                let wicketCount = wicket + 1;
-                                setTotalWicketsInFirstInnings(wicketCount)
-                            }
-                        }
-                        if (innings == 2) {
-                            let wicket = totalWicketsInSecondInnings;
-                            if (isWicket) {
-                                updatedBowler.wicket += 1;
-                                let wicketCount = wicket + 1;
-                                setTotalWicketsInSecondInnings(wicketCount)
-                            }
-                        }
-
-                        let economyRate = 0;
-                        if (updatedBowler.overs > 0) {
-                            economyRate = updatedBowler.runs / updatedBowler.overs;
-                        }
-
-                        updatedBowler.economy = economyRate; // Store the economy rate in the bowler stats
-                        // console.log('ER', economyRate);
-
-                        return updatedBowler;
-                    }
-
-                    // Increment balls count unless it's a wide or no-ball
-                    let newBalls = isExtra ? currentBalls + 1 : currentBalls;
-                    // console.log('Type of Extra', isExtra, isExtraType)
-
-                    // Calculate overs based on new balls count
-                    const isOverComplete = newBalls === 6;
-                    let newOvers = Math.floor(newBalls / 6);
-                    let ballsInCurrentOver = newBalls % 6;
-
-                    if (isOverComplete) {
-                        let ballInOver = [];
-                        let runsPerBall = [];
-                        handleOverCompletion(prevBowler2ndInnings);
-                        const overNumber = newOvers + (ballsInCurrentOver / 10); // over number in decimal form (e.g., 1.3)
-                        setSelectedBatsman(
-                            selectedBatsman.name === selectedBatsman1.name ? selectedBatsman2 : selectedBatsman1
-                        );
-                        const runsInCurrentOver = prevBowler2ndInnings.runs + runs; // Update runs in the over
-                        // const ballInOver = `${newOvers}.${ballsInCurrentOver + 1}`;
-                        for (let i = 1; i <= 6; i++) {
-                            ballInOver.push(`${newOvers - 1}.${i}`);
-                            runsPerBall.push(runs);
-                            // console.log('ballInOver', ballInOver);
-                            // console.log('runsPerBall', runsPerBall);
-                        }
-                        const totalBalls = ballInOver.length;
-                        addOverDetails(ballInOver, runsInCurrentOver, overNumber);
-                        saveMatchDataToBackend(overNumber, ballInOver, totalBalls, runsPerBall);
-                        newBalls = 0;
-                        newOvers += 1;
-                    }
-
-                    let oversInDecimal = newOvers + ballsInCurrentOver / 10;
-                    oversInDecimal = Math.round(oversInDecimal * 10) / 10;
-
-                    // Update bowler stats
-                    const updatedBowler = {
-                        ...prevBowler2ndInnings,
-                        balls: newBalls,
-                        overs: oversInDecimal,
-                        runs: prevBowler2ndInnings.runs + runs, // Add runs to bowler's total only if valid runs
-                    };
-
-                    // Extras are recorded separately
-                    if (isExtra) {
-                        updatedBowler.extras += extraRuns;
-                    }
-
-                    // Update wickets if applicable
-                    if (isWicket) {
-                        updatedBowler.wicket += 1;
-                    }
-
-                    let economyRate = 0;
-                    if (updatedBowler.overs > 0) {
-                        economyRate = updatedBowler.runs / updatedBowler.overs;
-                    }
-
-                    updatedBowler.economy = economyRate; // Store the economy rate in the bowler stats
-
-                    return updatedBowler;
-                }
+        
                 if (innings == 2) {
                     if (isExtraType !== 'LegByes' || isExtra !== 'Byes' || isWicket) {
                         let newBalls = isExtra ? currentBalls : currentBalls + 1;
@@ -1655,13 +939,6 @@ const Scoreboard = ({ route }) => {
                         // Handling extra types like Wide or NoBall
                         if (isExtra) {
                             if (isExtraType === 'Wide') {
-                                if (innings == 1) {
-                                    // For a wide ball, keep the same decimal for the ball number (e.g., 0.3, 1.3, etc.)
-                                    ballsInOver.push(newOvers + '.' + (ballsInCurrentOver + 1)); // Example: 0.3
-                                    runsInOver.push(extraRuns); // Store the runs for wide (e.g., +2 for wide)
-                                    prevBowler2ndInnings.wides += 1;
-                                    setCurrentOverAndBallForFirstInnings(newOvers + '.' + legalBallsInOver);
-                                }
                                 if (innings == 2) {
 
                                     // For a wide ball, keep the same decimal for the ball number (e.g., 0.3, 1.3, etc.)
@@ -1671,13 +948,7 @@ const Scoreboard = ({ route }) => {
                                     setCurrentOverAndBallForSecondInnings(newOvers + '.' + legalBallsInOver);
                                 }
                             } else if (isExtraType === 'NoBall') {
-                                if (innings == 1) {
-                                    // For a no-ball, keep the same decimal for the ball number (e.g., 0.3, 1.3, etc.)
-                                    ballsInOver.push(newOvers + '.' + (ballsInCurrentOver + 1)); // Example: 0.3
-                                    runsInOver.push(extraRuns); // Store the runs for no-ball (e.g., +1 for no-ball)
-                                    prevBowler2ndInnings.noball += 1;
-                                    setCurrentOverAndBallForFirstInnings(newOvers + '.' + legalBallsInOver);
-                                }
+                               
                                 if (innings == 2) {
 
                                     // For a no-ball, keep the same decimal for the ball number (e.g., 0.3, 1.3, etc.)
@@ -1704,18 +975,7 @@ const Scoreboard = ({ route }) => {
                                         // console.log(' batsman 1 id (immediate): ', selectedBatsman2.id);
                                         // console.log('dismissed batsman 2 (immediate): ', dismissedBatsmen2Ref.current);
                                     }
-                                    if (innings == 1) {
-                                        // console.log('Over No', currentOver)
-                                        ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                        // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                        runsInOver.push(runs); // Store the runs for the legal ball
-                                        legalBallsInOver++; // Increment only for legal balls
-                                        // console.log('ball No', legalBallsInOver)
-                                        setCurrentOverAndBallForFirstInnings(newOvers + '.' + legalBallsInOver);
-                                        sendBatsmenDataToBackend(overNumber);
-                                        dismissedBatsmen1Ref.current = 0;  // Mark batsman 1 as dismissed
-                                        dismissedBatsmen2Ref.current = 0;  // Mark batsman 1 as dismissed
-                                    }
+                                  
                                     if (innings == 2) {
                                         // console.log('Over No', currentOver)
                                         ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
@@ -1732,17 +992,6 @@ const Scoreboard = ({ route }) => {
 
                                 }
                                 else {
-                                    if (innings == 1) {
-                                        // console.log('Over No', currentOver)
-                                        ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                        // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                        runsInOver.push(runs); // Store the runs for the legal ball
-                                        legalBallsInOver++; // Increment only for legal balls
-                                        // console.log('ball No', legalBallsInOver)
-                                        setCurrentOverAndBallForFirstInnings(newOvers + '.' + legalBallsInOver);
-                                        wicket = wicket + 1;
-                                        // console.log('WC', wicket)
-                                    }
                                     if (innings == 2) {
 
                                         // console.log('Over No', currentOver)
@@ -1770,17 +1019,6 @@ const Scoreboard = ({ route }) => {
                                         // console.log(' batsman 2 id (immediate): ', selectedBatsman2.id);
                                         // console.log('dismissed batsman 2 (immediate): ', dismissedBatsmen2Ref.current);
                                     }
-                                    if (innings == 1) {
-                                        ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                        // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                        runsInOver.push(runs); // Store the runs for the legal ball
-                                        legalBallsInOver++; // Increment only for legal balls
-                                        // console.log('ball No', legalBallsInOver)
-                                        setCurrentOverAndBallForFirstInnings(newOvers + 1);
-                                        sendBatsmenDataToBackend(overNumber);
-                                        dismissedBatsmen1Ref.current = 0;  // Mark batsman 1 as dismissed
-                                        dismissedBatsmen2Ref.current = 0;  // Mark batsman 1 as dismissed
-                                    }
                                     if (innings == 2) {
 
                                         ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
@@ -1793,16 +1031,6 @@ const Scoreboard = ({ route }) => {
                                         dismissedBatsmen1Ref.current = 0;  // Mark batsman 1 as dismissed
                                         dismissedBatsmen2Ref.current = 0;  // Mark batsman 1 as dismissed
                                     }
-                                }
-                                if (innings == 1) {
-                                    ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
-                                    // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                    runsInOver.push(runs); // Store the runs for the legal ball
-                                    legalBallsInOver++; // Increment only for legal balls
-                                    // console.log('ball No', legalBallsInOver)
-                                    setCurrentOverAndBallForFirstInnings(newOvers + 1);
-                                    // console.log('ball by ball', (newOvers - 1) + '.' + (legalBallsInOver + 1))
-
                                 }
                                 if (innings == 2) {
 
@@ -1874,7 +1102,7 @@ const Scoreboard = ({ route }) => {
                                 legalBallsInOver = 0; // Reset after over completion
                                 // newOvers += 1;
                                 setCurrentOver2ndInnings(newOvers);
-                                let resultMessage = `${battingTeamName} Wins by ${10-totalWicketsInSecondInnings} wicket!`;
+                                let resultMessage = `${battingTeamName} Wins by ${10 - totalWicketsInSecondInnings} wicket!`;
                                 sendResultToAPI(resultMessage);
                                 Alert.alert("Congratulations", resultMessage);
                                 navigation.navigate('Dashboard')
@@ -1890,7 +1118,7 @@ const Scoreboard = ({ route }) => {
                                 legalBallsInOver = 0; // Reset after over completion
                                 // newOvers += 1;
                                 setCurrentOver2ndInnings(newOvers);
-                                let resultMessage = `${bowlingTeamName} Wins by ${totalRunsSecondInnings-totalRunsFirstInnings} runs!`;
+                                let resultMessage = `${bowlingTeamName} Wins by ${totalRunsSecondInnings - totalRunsFirstInnings} runs!`;
                                 Alert.alert('Congratulations', bowlingTeamName + " Wins!");
                             } else if ((totalRunsSecondInnings === totalRunsFirstInnings) && (totalOvers === currentOverAndBallForSecondInnings)) {
                                 let runsInCurrentOver = prevBowler2ndInnings.runs + runs; // Update runs in the over
@@ -1950,14 +1178,6 @@ const Scoreboard = ({ route }) => {
                         }
 
                         // Update wickets if applicable
-                        if (innings == 1) {
-                            let wicket = totalWicketsInFirstInnings;
-                            if (isWicket) {
-                                updatedBowler.wicket += 1;
-                                let wicketCount = wicket + 1;
-                                setTotalWicketsInFirstInnings(wicketCount)
-                            }
-                        }
                         if (innings == 2) {
                             let wicket = totalWicketsInSecondInnings;
                             if (isWicket) {
