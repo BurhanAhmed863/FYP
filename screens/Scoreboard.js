@@ -26,6 +26,7 @@ const Scoreboard = ({ route }) => {
     const [totalWicketsInFirstInnings, setTotalWicketsInFirstInnings] = useState(0);
     const [totalWicketsInSecondInnings, setTotalWicketsInSecondInnings] = useState(0);
     const [modalVisible, setModalVisible] = useState(true); // Modal is initially shown
+    const [sendResultToAPICondition, setSendResultToAPICondition] = useState(false); // Modal is initially shown
     const [selectedBatsman1, setSelectedBatsman1] = useState(null);
     const [selectedBatsman2, setSelectedBatsman2] = useState(null);
     const [players, setPlayers] = useState([]);
@@ -81,6 +82,7 @@ const Scoreboard = ({ route }) => {
     useEffect(() => {
         totalRunsFirstInnings
     }, [totalRunsFirstInnings])
+
     const handleOverComplete = async () => {
         try {
             // Prepare the data to send to the API
@@ -189,6 +191,43 @@ const Scoreboard = ({ route }) => {
         }
     };
 
+    useEffect(() => {
+        if (selectedBatsman1 && selectedBatsman2) {
+            const batsmenData = [
+                {
+                    batsman_name: selectedBatsman1.name,
+                    runs_scored: Array.isArray(selectedBatsman1.ballRuns) ? selectedBatsman1.ballRuns.reduce((sum, ballRun) => sum + ballRun, 0) : 0,
+                    balls_faced: selectedBatsman1.balls,
+                    strike_rate: ((Array.isArray(selectedBatsman1.ballRuns) ? selectedBatsman1.ballRuns.reduce((sum, ballRun) => sum + ballRun, 0) : 0) / (selectedBatsman1.ballRuns.length)) * 100,
+                    fours: selectedBatsman1.fours,
+                    sixes: selectedBatsman1.sixes,
+                    ones: selectedBatsman1.ones,
+                    twos: selectedBatsman1.twos,
+                    threes: selectedBatsman1.threes,
+                    dots: selectedBatsman1.dots,
+                    ball_runs: selectedBatsman1.ballRuns,
+                    over_number: overNumber,
+                    dismissed: dismissedBatsmen1Ref.current,
+                },
+                {
+                    batsman_name: selectedBatsman2.name,
+                    runs_scored: Array.isArray(selectedBatsman2.ballRuns) ? selectedBatsman2.ballRuns.reduce((sum, ballRun) => sum + ballRun, 0) : 0,
+                    balls_faced: selectedBatsman2.balls,
+                    strike_rate: ((Array.isArray(selectedBatsman2.ballRuns) ? selectedBatsman2.ballRuns.reduce((sum, ballRun) => sum + ballRun, 0) : 0) / (selectedBatsman2.ballRuns.length)) * 100,
+                    fours: selectedBatsman2.fours,
+                    sixes: selectedBatsman2.sixes,
+                    ones: selectedBatsman2.ones,
+                    twos: selectedBatsman2.twos,
+                    threes: selectedBatsman2.threes,
+                    dots: selectedBatsman2.dots,
+                    ball_runs: selectedBatsman2.ballRuns,
+                    over_number: overNumber,
+                    dismissed: dismissedBatsmen1Ref.current,
+                }
+            ]
+            console.log("Updated Batsmen Data:", batsmenData);
+        }
+    }, [selectedBatsman1, selectedBatsman2]); // Trigger whenever selectedBatsman1 changes
 
     const sendBatsmenDataToBackend = async (overNumber) => {
         const batsmenData = [
@@ -196,7 +235,7 @@ const Scoreboard = ({ route }) => {
                 batsman_name: selectedBatsman1.name,
                 runs_scored: Array.isArray(selectedBatsman1.ballRuns) ? selectedBatsman1.ballRuns.reduce((sum, ballRun) => sum + ballRun, 0) : 0,
                 balls_faced: selectedBatsman1.ballRuns.length,
-                strike_rate: selectedBatsman1.strikeRate,
+                strike_rate: ((Array.isArray(selectedBatsman1.ballRuns) ? selectedBatsman1.ballRuns.reduce((sum, ballRun) => sum + ballRun, 0) : 0) / (selectedBatsman1.ballRuns.length)) * 100,
                 fours: selectedBatsman1.fours,
                 sixes: selectedBatsman1.sixes,
                 ones: selectedBatsman1.ones,
@@ -211,7 +250,7 @@ const Scoreboard = ({ route }) => {
                 batsman_name: selectedBatsman2.name,
                 runs_scored: Array.isArray(selectedBatsman2.ballRuns) ? selectedBatsman2.ballRuns.reduce((sum, ballRun) => sum + ballRun, 0) : 0,
                 balls_faced: selectedBatsman2.ballRuns.length,
-                strike_rate: selectedBatsman2.strikeRate,
+                strike_rate: ((Array.isArray(selectedBatsman2.ballRuns) ? selectedBatsman2.ballRuns.reduce((sum, ballRun) => sum + ballRun, 0) : 0) / (selectedBatsman2.ballRuns.length)) * 100,
                 fours: selectedBatsman2.fours,
                 sixes: selectedBatsman2.sixes,
                 ones: selectedBatsman2.ones,
@@ -269,6 +308,7 @@ const Scoreboard = ({ route }) => {
                         updatedBatsman.wicket_type = wicketType;
                         dismissedBatsmen1Ref.current = 1;
                         dismissedBatsmenIds.current.push(selectedBatsman1.id);
+                        console.log('updatedBatsman', updatedBatsman);
                         return updatedBatsman;
                     });
                     setSelectedBatsman(selectedBatsman1); // Update selected batsman
@@ -284,6 +324,7 @@ const Scoreboard = ({ route }) => {
                         updatedBatsman.wicket_type = wicketType;
                         dismissedBatsmen2Ref.current = 1;
                         dismissedBatsmenIds.current.push(selectedBatsman2.id);
+                        console.log('updatedBatsman', updatedBatsman);
                         return updatedBatsman;
                     });
                     setSelectedBatsman(selectedBatsman2); // Update selected batsman
@@ -306,15 +347,18 @@ const Scoreboard = ({ route }) => {
                             const updatedBatsman = { ...prevBatsman };
                             updatedBatsman.runs += runs;
                             updatedBatsman.balls += 1;
-                            updatedBatsman.ballRuns.push(runs); // Add the current ball's runs
-                            updatedBatsman.strikeRate = (updatedBatsman.runs / updatedBatsman.balls) * 100;
-                            // Update additional stats
                             if (runs === 6) updatedBatsman.sixes += 1;
+                            console.log("Sixes:", updatedBatsman.sixes)
                             if (runs === 4) updatedBatsman.fours += 1;
+                            console.log("Fours:", updatedBatsman.fours)
                             if (runs === 1) updatedBatsman.ones += 1;
                             if (runs === 2) updatedBatsman.twos += 1;
                             if (runs === 3) updatedBatsman.threes += 1;
                             if (runs === 0) updatedBatsman.dots += 1;
+                            updatedBatsman.ballRuns.push(runs); // Add the current ball's runs
+                            updatedBatsman.strikeRate = (updatedBatsman.runs / updatedBatsman.balls) * 100;
+                            console.log('updatedBatsman', updatedBatsman);
+                            // Update additional stats
                             return updatedBatsman;
                         });
                         if (innings == 1) {
@@ -338,6 +382,7 @@ const Scoreboard = ({ route }) => {
                             if (runs === 2) updatedBatsman.twos += 1;
                             if (runs === 3) updatedBatsman.threes += 1;
                             if (runs === 0) updatedBatsman.dots += 1;
+                            console.log('updatedBatsman', updatedBatsman);
                             return updatedBatsman;
                         });
                         if (innings == 1) {
@@ -349,15 +394,11 @@ const Scoreboard = ({ route }) => {
                     }
                 }
             }
-
-            // Step 3: Update bowler stats (after batsman stats are updated)
-
-            // Step 4: After batsman stats and bowler stats are updated, send data to the backend
-            // sendBatsmenDataToBackend();
         } catch (error) {
             Alert.alert("Error updating score: " + error.message);
         }
     };
+
     const updateScoreSecondInnings = (runs, isWicket = false, isExtra = false) => {
         if (innings == 2) {
             setTotalRunsSecondInnings((prevRuns) => prevRuns + runs);
@@ -470,10 +511,16 @@ const Scoreboard = ({ route }) => {
         }
     };
 
+    useEffect(() => {
+        if (isOverComplete || (isOverComplete && isWicket)) {
+            sendBatsmenDataToBackend(currentOver);
+        }
+    }, [selectedBatsman1, selectedBatsman2, currentOver]);
+
     const updateBowlerStats = (runs, isWicket = false, isExtra = false, isExtraType = null, extraRuns = null) => {
         setSelectedBowler((prevBowler) => {
             if (innings === 1) {
-                console.log('test', selectedBowler)
+                console.log('Innings 1 Bowler Data:', selectedBowler)
                 // Ensure balls are initialized to 0 if undefined
                 let currentBalls = prevBowler.balls ?? 0;
                 let ballsInOver = prevBowler.ballsInOver ?? []; // Array to store balls
@@ -505,7 +552,7 @@ const Scoreboard = ({ route }) => {
                             if (innings == 1) {
                                 ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
                                 // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                runsInOver.push(runs); // Store the runs for the legal ball
+                                // runsInOver.push(runs); // Store the runs for the legal ball
                                 legalBallsInOver++; // Increment only for legal balls
                                 // console.log('ball No', legalBallsInOver)
                                 setCurrentOverAndBallForFirstInnings(newOvers + '.' + legalBallsInOver);
@@ -654,7 +701,7 @@ const Scoreboard = ({ route }) => {
                                     if (innings == 1) {
                                         ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
                                         // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                        runsInOver.push(runs); // Store the runs for the legal ball
+                                        // runsInOver.push(runs); // Store the runs for the legal ball
                                         legalBallsInOver++; // Increment only for legal balls
                                         // console.log('ball No', legalBallsInOver)
                                         setCurrentOverAndBallForFirstInnings(newOvers + 1);
@@ -666,18 +713,20 @@ const Scoreboard = ({ route }) => {
                                 if (innings == 1) {
                                     ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
                                     // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                    runsInOver.push(runs); // Store the runs for the legal ball
+                                    // runsInOver.push(runs); // Store the runs for the legal ball
                                     legalBallsInOver++; // Increment only for legal balls
                                     // console.log('ball No', legalBallsInOver)
+                                    console.log("Runs For Last Ball: ", runsInOver);
                                     setCurrentOverAndBallForFirstInnings(newOvers + 1);
                                     // console.log('ball by ball', (newOvers - 1) + '.' + (legalBallsInOver + 1))
-
                                 }
                             }
                         }
 
                         if (isOverComplete || (isOverComplete && isWicket)) {
+                            runsInOver.push(runs); // Store the runs for the legal ball
                             let runsInCurrentOver = prevBowler.runs + runs; // Update runs in the over
+                            console.log("Runs For complete Over: ", runsInOver);
                             const totalBalls = ballsInOver.length;
                             handleOverCompletion(prevBowler);
                             const overNumber = newOvers + (ballsInCurrentOver / 10); // Over number in decimal form (e.g., 1.3)
@@ -689,7 +738,8 @@ const Scoreboard = ({ route }) => {
 
                             addOverDetails(ballsInOver, runsInCurrentOver, overNumber);
                             saveMatchDataToBackend(overNumber, ballsInOver, totalBalls, runsInOver);
-                            sendBatsmenDataToBackend(overNumber);
+                            console.log('Sixes and Fours', selectedBatsman1.sixes, selectedBatsman1.fours)
+                            // sendBatsmenDataToBackend(overNumber);
                             newBalls = 0;
                             legalBallsInOver = 0; // Reset after over completion
                             // newOvers += 1;
@@ -759,6 +809,7 @@ const Scoreboard = ({ route }) => {
                         for (let i = 1; i <= 6; i++) {
                             ballInOver.push(`${newOvers - 1}.${i}`);
                             runsPerBall.push(runs);
+
                             // console.log('ballInOver', ballInOver);
                             // console.log('runsPerBall', runsPerBall);
                         }
@@ -831,7 +882,7 @@ const Scoreboard = ({ route }) => {
     const updateBowlerStatsForSeconInnings = (runs, isWicket = false, isExtra = false, isExtraType = null, extraRuns = null) => {
         setSelectedBowler((prevBowler2ndInnings) => {
             if (innings === 2) {
-                console.log('checkingggg', selectedBowler)
+                console.log('Innings 1 Bowler Data:', selectedBowler)
                 // Ensure balls are initialized to 0 if undefined
                 let currentBalls = prevBowler2ndInnings.balls ?? 0;
                 let ballsInOver = prevBowler2ndInnings.ballsInOver ?? []; // Array to store balls
@@ -862,10 +913,9 @@ const Scoreboard = ({ route }) => {
                         }
                         if (legalBallsInOver === 5 || isWicket) {
                             if (innings == 2) {
-
                                 ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
                                 // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                runsInOver.push(runs); // Store the runs for the legal ball
+                                // runsInOver.push(runs); // Store the runs for the legal ball
                                 legalBallsInOver++; // Increment only for legal balls
                                 // console.log('ball No', legalBallsInOver)
                                 setCurrentOverAndBallForSecondInnings(newOvers + '.' + legalBallsInOver);
@@ -875,6 +925,7 @@ const Scoreboard = ({ route }) => {
                     }
 
                     if (isOverComplete || (isOverComplete && isWicket)) {
+                        runsInOver.push(runs); // Store the runs for the legal ball
                         let runsInCurrentOver = prevBowler2ndInnings.runs + runs; // Update runs in the over
                         const totalBalls = ballsInOver.length;
                         handleOverCompletion(prevBowler2ndInnings);
@@ -928,7 +979,7 @@ const Scoreboard = ({ route }) => {
 
                     return updatedBowler;
                 }
-        
+
                 if (innings == 2) {
                     if (isExtraType !== 'LegByes' || isExtra !== 'Byes' || isWicket) {
                         let newBalls = isExtra ? currentBalls : currentBalls + 1;
@@ -948,7 +999,7 @@ const Scoreboard = ({ route }) => {
                                     setCurrentOverAndBallForSecondInnings(newOvers + '.' + legalBallsInOver);
                                 }
                             } else if (isExtraType === 'NoBall') {
-                               
+
                                 if (innings == 2) {
 
                                     // For a no-ball, keep the same decimal for the ball number (e.g., 0.3, 1.3, etc.)
@@ -975,7 +1026,7 @@ const Scoreboard = ({ route }) => {
                                         // console.log(' batsman 1 id (immediate): ', selectedBatsman2.id);
                                         // console.log('dismissed batsman 2 (immediate): ', dismissedBatsmen2Ref.current);
                                     }
-                                  
+
                                     if (innings == 2) {
                                         // console.log('Over No', currentOver)
                                         ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
@@ -993,7 +1044,6 @@ const Scoreboard = ({ route }) => {
                                 }
                                 else {
                                     if (innings == 2) {
-
                                         // console.log('Over No', currentOver)
                                         ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
                                         // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
@@ -1023,7 +1073,7 @@ const Scoreboard = ({ route }) => {
 
                                         ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
                                         // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                        runsInOver.push(runs); // Store the runs for the legal ball
+                                        // runsInOver.push(runs); // Store the runs for the legal ball
                                         legalBallsInOver++; // Increment only for legal balls
                                         // console.log('ball No', legalBallsInOver)
                                         setCurrentOverAndBallForSecondInnings(newOvers + 1);
@@ -1036,7 +1086,7 @@ const Scoreboard = ({ route }) => {
 
                                     ballsInOver.push(newOvers + '.' + (legalBallsInOver + 1)); // Increment legal ball number (e.g., 0.1, 0.2, etc.)
                                     // console.log('ball by ball', newOvers + '.' + (legalBallsInOver + 1))
-                                    runsInOver.push(runs); // Store the runs for the legal ball
+                                    // runsInOver.push(runs); // Store the runs for the legal ball
                                     legalBallsInOver++; // Increment only for legal balls
                                     // console.log('ball No', legalBallsInOver)
                                     setCurrentOverAndBallForSecondInnings(newOvers + 1);
@@ -1044,10 +1094,7 @@ const Scoreboard = ({ route }) => {
                                 }
                             }
                         }
-                        if (
-                            (totalOvers <= currentOverAndBallForSecondInnings) ||
-                            (totalRunsSecondInnings >= totalRunsFirstInnings)
-                        ) {
+                        if (sendResultToAPICondition == true) {
                             const sendResultToAPI = async (resultMessage) => {
                                 try {
                                     const dataToSend = {
@@ -1090,7 +1137,7 @@ const Scoreboard = ({ route }) => {
                                     Alert.alert("Error", "Failed to save match result.");
                                 }
                             };
-                            if (totalRunsSecondInnings > totalRunsFirstInnings) {
+                            if (totalRunsSecondInnings > totalRunsFirstInnings + 1) {
                                 let runsInCurrentOver = prevBowler2ndInnings.runs + runs; // Update runs in the over
                                 const totalBalls = ballsInOver.length;
                                 handleOverCompletion(prevBowler2ndInnings);
@@ -1106,7 +1153,7 @@ const Scoreboard = ({ route }) => {
                                 sendResultToAPI(resultMessage);
                                 Alert.alert("Congratulations", resultMessage);
                                 navigation.navigate('Dashboard')
-                            } else if ((totalRunsSecondInnings < totalRunsFirstInnings) && (totalOvers <= currentOversDecimal)) {
+                            } else if ((totalRunsSecondInnings < totalRunsFirstInnings + 1) && (totalOvers === currentOverAndBallForSecondInnings)) {
                                 let runsInCurrentOver = prevBowler2ndInnings.runs + runs; // Update runs in the over
                                 const totalBalls = ballsInOver.length;
                                 handleOverCompletion(prevBowler2ndInnings);
@@ -1119,6 +1166,7 @@ const Scoreboard = ({ route }) => {
                                 // newOvers += 1;
                                 setCurrentOver2ndInnings(newOvers);
                                 let resultMessage = `${bowlingTeamName} Wins by ${totalRunsSecondInnings - totalRunsFirstInnings} runs!`;
+                                sendResultToAPI(resultMessage);
                                 Alert.alert('Congratulations', bowlingTeamName + " Wins!");
                             } else if ((totalRunsSecondInnings === totalRunsFirstInnings) && (totalOvers === currentOverAndBallForSecondInnings)) {
                                 let runsInCurrentOver = prevBowler2ndInnings.runs + runs; // Update runs in the over
@@ -1136,8 +1184,10 @@ const Scoreboard = ({ route }) => {
                                 sendResultToAPI(resultMessage);
                                 Alert.alert("Match Tied", resultMessage);
                             }
+
                         }
                         if (isOverComplete || (isOverComplete && isWicket)) {
+                            runsInOver.push(runs);
                             let runsInCurrentOver = prevBowler2ndInnings.runs + runs; // Update runs in the over
                             const totalBalls = ballsInOver.length;
                             handleOverCompletion(prevBowler2ndInnings);
@@ -1150,7 +1200,7 @@ const Scoreboard = ({ route }) => {
 
                             addOverDetails(ballsInOver, runsInCurrentOver, overNumber);
                             saveMatchDataToBackend(overNumber, ballsInOver, totalBalls, runsInOver);
-                            sendBatsmenDataToBackend(overNumber);
+                            // sendBatsmenDataToBackend(overNumber);
                             newBalls = 0;
                             legalBallsInOver = 0; // Reset after over completion
                             // newOvers += 1;
@@ -1265,6 +1315,14 @@ const Scoreboard = ({ route }) => {
             }
         });
     };
+    useEffect(() => {
+        if ((totalOvers <= currentOverAndBallForSecondInnings) || (totalRunsSecondInnings >= totalRunsFirstInnings + 1)) {
+            setSendResultToAPICondition(true);
+        }
+    }, [totalRunsSecondInnings,
+        totalRunsFirstInnings+1,
+        currentOverAndBallForSecondInnings,
+        totalOvers, sendResultToAPICondition])
 
     const addOverDetails = (ballNumber, runs, overNumber) => {
         setOverDetail((prevOverDetail) => [...prevOverDetail, ...ballNumber]);

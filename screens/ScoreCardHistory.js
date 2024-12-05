@@ -16,26 +16,33 @@ const ScoreCardHistory = ({ route, navigation }) => {
     const { match_id } = route.params;
 
     const [isLoading, setIsLoading] = useState(true);
-    const [inningsData, setInningsData] = useState({ firstInnings: null, secondInnings: null });
+    const [firstInningsData, setFirstInningsData] = useState(null);
+    const [secondInningsData, setSecondInningsData] = useState(null);
 
     useEffect(() => {
-        fetchMatchSummary();
+        fetchFirstInningsData();
+        fetchSecondInningsData();
     }, []);
 
-    const fetchMatchSummary = async () => {
+    const fetchFirstInningsData = async () => {
         try {
-            const firstInnings = await fetchInningsData(1);
-            const secondInnings = await fetchInningsData(2);
-
-            setInningsData({
-                firstInnings,
-                secondInnings,
-            });
+            const data = await fetchInningsData(1);
+            setFirstInningsData(data);
         } catch (error) {
-            console.error('Error fetching match summary:', error);
-            Alert.alert('Error', 'Unable to fetch match summary.');
+            console.error('Error fetching first innings data:', error);
+            Alert.alert('Error', 'Unable to fetch first innings data.');
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const fetchSecondInningsData = async () => {
+        try {
+            const data = await fetchInningsData(2);
+            setSecondInningsData(data);
+        } catch (error) {
+            console.error('Error fetching second innings data:', error);
+            Alert.alert('Error', 'Unable to fetch second innings data.');
         }
     };
 
@@ -59,12 +66,10 @@ const ScoreCardHistory = ({ route, navigation }) => {
             if (data.status === 'success') {
                 const inningsData = data.data.filter(item => item.batsman_name && item.bowler_name);
 
-                // Process the data into batsmen and bowlers stats
                 const batsmen = {};
                 const bowlers = {};
 
                 inningsData.forEach(item => {
-                    // Collect batsmen data
                     if (!batsmen[item.batsman_name]) {
                         batsmen[item.batsman_name] = {
                             name: item.batsman_name,
@@ -76,19 +81,20 @@ const ScoreCardHistory = ({ route, navigation }) => {
                             wicketType: item.wicket_type,
                         };
                     }
-                    batsmen[item.batsman_name].runs += item.runs_scored;
-                    batsmen[item.batsman_name].balls = item.ball_number;
+                    if (item.runs_scored > batsmen[item.batsman_name].runs) {
+                        batsmen[item.batsman_name].runs = item.runs_scored;
+                        batsmen[item.batsman_name].balls = item.ball_number;
+                    }
                     batsmen[item.batsman_name].fours = item.fours;
                     batsmen[item.batsman_name].sixes = item.sixes;
                     batsmen[item.batsman_name].strikeRate = item.strike_rate;
 
-                    // Collect bowler data
                     if (!bowlers[item.bowler_name]) {
                         bowlers[item.bowler_name] = {
                             name: item.bowler_name,
                             runs: 0,
                             balls: 0,
-                            overs: item.over_count,
+                            overs: (Math.floor(item.total_balls / 6) + (item.total_balls % 6) / 10 + (item.over_count - 1)).toFixed(1),  // Correct overs calculation
                             wickets: item.total_wickets,
                             economy: item.economy_rate,
                         };
@@ -111,13 +117,6 @@ const ScoreCardHistory = ({ route, navigation }) => {
         <View style={styles.sectionContainer}>
             <Text style={styles.sectionHeader}>{title}</Text>
             {content}
-        </View>
-    );
-
-    const renderStatsRow = (label, value) => (
-        <View style={styles.statsRow}>
-            <Text style={styles.statsLabel}>{label}</Text>
-            <Text style={styles.statsValue}>{value}</Text>
         </View>
     );
 
@@ -166,7 +165,7 @@ const ScoreCardHistory = ({ route, navigation }) => {
         return (
             <View style={styles.loader}>
                 <ActivityIndicator size="large" color="#FFD700" />
-                <Text style={styles.loaderText}>Loading Match Summary...</Text>
+                <Text style={styles.loaderText}>Loading Match Data...</Text>
             </View>
         );
     }
@@ -174,10 +173,8 @@ const ScoreCardHistory = ({ route, navigation }) => {
     return (
         <ScrollView style={styles.container}>
             <Text style={styles.header}>Match Summary</Text>
-
-            {renderInningsData('1st Innings', inningsData.firstInnings)}
-            {renderInningsData('2nd Innings', inningsData.secondInnings)}
-
+            {renderInningsData('1st Innings', firstInningsData)}
+            {renderInningsData('2nd Innings', secondInningsData)}
             <View style={styles.buttonContainer}>
                 <Button title="Back to Match" color="#E79E1B" onPress={() => navigation.goBack()} />
             </View>
