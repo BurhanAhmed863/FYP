@@ -50,7 +50,7 @@ const EnterTournamentName = () => {
     
             if (result.status === 'Success') {
                 Alert.alert('Success', result.msg);
-                navigation.navigate('EnterTournamentTeamName', { tournamentName, noOfTeam, selectedTournamentType});
+                navigation.navigate('DetailMatch', { tournamentName, noOfTeam, selectedTournamentType});
             } else {
                 Alert.alert('Error', result.msg); // Show error message if any
             }

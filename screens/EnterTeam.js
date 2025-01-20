@@ -36,32 +36,7 @@ const EnterTeam = () => {
 
     useEffect(() => {
         // Function to fetch teams
-        const fetchTeams = async () => {
-            try {
-                const response = await axios.get(`${apiIp}/fetchTeams.php`);
-                const result = response.data;
-                // console.log('Result Logos:', result.logos);
-
-                if (result.status === 'success') {
-                    if (result.logos && Array.isArray(result.logos)) {
-                        const logosWithUrl = result.logos.map(logoObj => {
-                            return `${apiIp}/TeamLogo/${logoObj.logo}`;
-                        });
-                        setLogos(logosWithUrl);  // Set logos with full URLs
-                        // console.log('Processed Logos:', logosWithUrl);
-                    }
-                    setTeams(result.teams);
-                } else {
-                    // Alert.alert('Error', result.message);
-                }
-            } catch (error) {
-                console.error(error);
-                Alert.alert('Error', 'Failed to fetch teams. Please try again.');
-            } finally {
-                setLoading(false);
-            }
-        };
-
+       
         // Fetch teams initially
         fetchTeams();
 
@@ -72,6 +47,33 @@ const EnterTeam = () => {
         return () => clearInterval(intervalId);
 
     }, []); // Empty dependency array to run the effect once on mount
+    const fetchTeams = async () => {
+            try {
+                const response = await axios.get(`${apiIp}/fetchTeams.php`);
+                const result = response.data;
+                // console.log('playing', response.data.teams);
+                // console.log('Result Logos:', result.logos);
+
+                if (result.status === 'success') {
+                    if (result.logo && Array.isArray(result.logo)) {
+                        const logosWithUrl = result.logo.map(logoObj => {
+                            return `${apiIp}/TeamLogo/${logoObj.logo}`;
+                        });
+                        setLogos(logosWithUrl);  // Set logos with full URLs
+                        // console.log('Processed Logos:', logosWithUrl);
+                    }
+                    setTeams(response.data.teams);
+                    
+                } else {
+                    // Alert.alert('Error', result.message);
+                }
+            } catch (error) {
+                console.error(error);
+                Alert.alert('Error', 'Failed to fetch teams. Please try again.');
+            } finally {
+                setLoading(false);
+            }
+        };
 
 
     // Function to handle image picking
@@ -191,8 +193,17 @@ const EnterTeam = () => {
         setEditTeamLogo(logouri); // Set the selected team's logo
         setEditPopupVisible(true); // Open the popup for editing
         setSelectedTeam(team);  // Store the selected team for further use if needed
+        console.log(teams)
         setTeamId(selectedTeam.id);
+        const imageUrl = team.logo.startsWith('http://localhost/MatchMate')
+            ? team.logo.replace('http://localhost/MatchMate', `${apiConnection.apiIp}`)
+            : team.logo;
+
+        setNewTeamLogo(imageUrl); // Populate the logo with the updated URL
         console.log(teamId);
+        console.log('Sel', imageUrl); // This will now print the updated URL
+        fetchTeams();
+        console.log('Sel', newTeamLogo);
         setOptionsModalVisible(false);
     };
 
@@ -205,7 +216,7 @@ const EnterTeam = () => {
         const updatedTeam = {
             id: selectedTeam.id, // Assuming each team has a unique ID
             name: editTeamName,
-            logo: editTeamLogo, // Use the updated logo URI
+            logo: newTeamLogo, // Use the updated logo URI
         };
 
         setLoading(true);
@@ -216,11 +227,11 @@ const EnterTeam = () => {
             formData.append('teamName', editTeamName);
 
             // Check if newTeamLogo is valid and add it to FormData
-            if (editTeamLogo) {
+            if (newTeamLogo) {
                 formData.append('logo', {
-                    uri: editTeamLogo,
-                    type: 'image/jpeg',
-                    name: 'team_logo.jpg',
+                    uri: newTeamLogo,
+                    name: 'image.jpg',
+                    type: 'team_logo/jpeg',
                 });
             }
 
@@ -233,6 +244,18 @@ const EnterTeam = () => {
 
             if (result.status === 'success') {
                 Alert.alert('Success', 'Team updated successfully!');
+
+                // setPlayers(players.map(player =>
+                //     player.id === selectedPlayer.id
+                //         ? { ...player, name: newPlayerName, role: playerType, img: result.player.img }
+                //         : player
+                // ));
+
+                // setNewTeamLogo(null);
+                // setNewPlayerName('');
+                // setPlayerType('');
+                // setIsEditMode(false);
+                // setPopupVisible(false); // Close the popup/modal
 
                 // Update the teams state with the updated team
                 setTeams(teams.map(team => team.id === selectedTeam.id ? updatedTeam : team));
@@ -262,12 +285,12 @@ const EnterTeam = () => {
                     team_id: team_id,
                 }),
             });
-    
+
             const responseText = await response.text();  // Get the raw response as text
             console.log('Server response:', responseText);  // Log the response to check
-    
+
             const result = JSON.parse(responseText);  // Manually parse the response text
-    
+
             if (result.status === 'success') {
                 alert("Team deleted successfully.");
                 setOptionsModalVisible(false);
@@ -280,7 +303,7 @@ const EnterTeam = () => {
             alert("An error occurred while trying to delete the team.");
         }
     };
-    
+
 
 
     const handleViewTeam = (team) => {
@@ -298,7 +321,7 @@ const EnterTeam = () => {
     };
 
     const navigateToPlayer = () => {
-        navigation.navigate('EnterPlayers', {selectedTeam});
+        navigation.navigate('EnterPlayers', { selectedTeam });
         setOptionsModalVisible(false);
     }
     return (
@@ -379,27 +402,26 @@ const EnterTeam = () => {
                             key={index}
                             style={EnterTeamStyle.inputContainer}
                             onPress={() => {
-                                setSelectedTeam(team);  // Set selected team
+                                setSelectedTeam(team); // Set selected team
                                 setEditTeamLogo(logos[index]);
-                                setOptionsModalVisible(true);  // Show the options modal
+                                setOptionsModalVisible(true); // Show the options modal
                             }}
                         >
-                            {logos[index] !== null ? (
-                                <TouchableOpacity onPress={() => handleEditTeam(logos[index], teamName, teamId)}>
+                            {logos[index] && logos[index] !== `${apiConnection.apiIp}/PlayerImages/` ? (
+                                <TouchableOpacity
+                                    onPress={() => handleEditTeam(logos[index], team.name, team.id)}
+                                >
                                     <Image
-                                        source={{ uri: logos[index] }}  // Use the corresponding logo URL
+                                        source={{ uri: logos[index] }} // Use the corresponding logo URL
                                         style={EnterTeamStyle.inputIcon} // Style the image
                                     />
                                 </TouchableOpacity>
                             ) : (
-                                <TouchableOpacity onPress={() => handleEditTeam(require('../assets/icons/user.png'), teamName, teamId)}>
-                                    <Image
-                                        source={{ uri: require('../assets/icons/user.png') }}  // Use the default logo
-                                        style={EnterTeamStyle.inputIcon} // Style the image
-                                    />
-                                </TouchableOpacity>
+                                <Image
+                                    source={require('../assets/icons/user.png')} // Default image
+                                    style={EnterTeamStyle.inputIcon}
+                                />
                             )}
-
                             <Text style={[EnterTeamStyle.input, { color: colors.text }]}>
                                 {team.name}
                             </Text>
@@ -488,15 +510,18 @@ const EnterTeam = () => {
                             style={[EnterTeamStyle.modalCameraButton]}
                             onPress={handleImagePicker} // Trigger image picker on press
                         >
-                            {!editTeamLogo ? (
+                            {!newTeamLogo && (
                                 <Icon name="camera" size={50} color="black" />
-                            ) : (
-                                <Image
-                                    source={{ uri: editTeamLogo }}
-                                    style={EnterTeamStyle.modalImage} // Add a style for image
-                                />
                             )}
                         </TouchableOpacity>
+
+                        {/* Show picked image */}
+                        {newTeamLogo && (
+                            <Image
+                                source={{ uri: newTeamLogo }}
+                                style={EnterTeamStyle.modalImage} // Add a style for image
+                            />
+                        )}
 
                         <Text style={[EnterTeamStyle.inputTitle, { color: colors.text }]}>
                             Team Name

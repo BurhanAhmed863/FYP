@@ -261,22 +261,16 @@ const EnterPlayers = ({ route, navigation }) => {
         }
     };
 
-    const handleViewPlayerStats = (player) => {
-        // Navigate to player stats screen or show stats
-        console.log('Viewing stats for player:', player);
-        // Example: Navigate to a player stats screen or display stats
-    };
-
     const handleAddToPlayingXi = async (player) => {
         try {
             console.log('Adding player to Playing XI:', player.id);
-    
+
             const payload = { playerId: player.id };
             console.log('Payload being sent:', payload);
-    
+
             const response = await axios.post(`${apiConnection.apiIp}/addToPlayingXI.php`, payload);
             console.log('Response from server:', response.data);
-    
+
             if (response.data.status === 'success') {
                 const { message, currentPlayingCount } = response.data;
                 console.log('Success:', message);
@@ -287,7 +281,7 @@ const EnterPlayers = ({ route, navigation }) => {
                 setOptionsModalVisible(false);
             } else {
                 const { message } = response.data;
-                console.log('msg',message)
+                console.log('msg', message)
                 Alert.alert('Alert', message);
             }
         } catch (error) {
@@ -295,7 +289,7 @@ const EnterPlayers = ({ route, navigation }) => {
             Alert.alert('Error', 'Failed to add player to Playing XI');
         }
     };
-    
+
 
     const fetchPlayerStatus = async (playerId) => {
         try {
@@ -369,6 +363,19 @@ const EnterPlayers = ({ route, navigation }) => {
         setIsEditMode(false);
     };
 
+    const handleViewPlayerStats = async (player) => {
+        console.log("Player Stats", {playerId,selectedTeam, imageUrl})
+        const playerId = player.id;
+        const imageUrl = player.player_img.startsWith('http://localhost/MatchMate')
+            ? player.player_img.replace('http://localhost/MatchMate', `${apiConnection.apiIp}`)
+            : player.player_img;
+
+        setNewTeamLogo(imageUrl); // Populate the logo with the updated URL
+        console.log('Sel', imageUrl); // This will now print the updated URL
+        navigation.navigate('PlayerStats', { playerId, imageUrl,selectedTeam });
+        setOptionsModalVisible(false);
+    };
+
     const cancelOptionsButton = () => {
         setOptionsModalVisible(false);
         // setNewTeamLogo(null);
@@ -415,7 +422,7 @@ const EnterPlayers = ({ route, navigation }) => {
                     <Text style={[EnterTeamStyle.input]}>{player.player_name}</Text>
                     <Text style={EnterTeamStyle.playerRole}>{player.role}</Text>
                     {player.isPlaying === 1 && (
-                         <FontAwesome6 name="circle-check" size={23} color="#f79e1b" style={EnterPlayersStyle.inteamText} /> // Render "In" for players in Playing XI
+                        <FontAwesome6 name="circle-check" size={23} color="#f79e1b" style={EnterPlayersStyle.inteamText} /> // Render "In" for players in Playing XI
                     )}
                 </TouchableOpacity>
             ))}

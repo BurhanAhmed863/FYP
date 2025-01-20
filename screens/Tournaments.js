@@ -79,7 +79,7 @@ const Tournaments = () => {
                         </LinearGradient>
                     </TouchableOpacity>
                     <Text style={[MatchesStyle.ongoingTxt, { color: colors.text }]}>New Tournament</Text>
-                    <TouchableOpacity onPress= {() => (navigation.navigate('TournamentResultsScreen'))}>
+                    <TouchableOpacity onPress= {() => (navigation.navigate('MatchesHistory'))}>
                         <LinearGradient
                             colors={['#FEC570', '#F7A01F']} // Define your gradient colors
                             start={{ x: 1, y: 0 }} // Optional: starting point of the gradient

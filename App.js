@@ -29,6 +29,7 @@ import TournamentResultsScreen from './screens/TournamentResultsScreen';
 import EveryOverInningsSummary from './screens/EveryOverInningsSummary';
 import MatchesHistory from './screens/MatchesHistory';
 import ScoreCardHistory from './screens/ScoreCardHistory';
+import PlayerStats from './screens/PlayerStats';
 // impo
 const Stack = createStackNavigator();
 
@@ -37,6 +38,7 @@ const App = () => {
     <ThemeProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen name="PlayerStats" component={PlayerStats} options={{ headerShown: false }} />
           <Stack.Screen name="ScoreCardHistory" component={ScoreCardHistory} options={{ headerShown: false }} />
           <Stack.Screen name="MatchesHistory" component={MatchesHistory} options={{ headerShown: false }} />
           <Stack.Screen name="EveryOverInningsSummary" component={EveryOverInningsSummary} options={{ headerShown: false }} />

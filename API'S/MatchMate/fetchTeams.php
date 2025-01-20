@@ -23,6 +23,7 @@ if ($result->num_rows > 0) {
         $teams[] = [
             'id' => $row['id'],
             'name' => $row['name'],
+            'logo' => $row['logo'],
         ];
         
         // Also fetch the logo separately if needed, you can handle it on the front-end.
@@ -30,10 +31,11 @@ if ($result->num_rows > 0) {
             'logo' => basename($row['logo']),
         ];
     }
+    // echo json_encode(["status" => "success", "players" => $players, "player_img" => $player_img]);
     echo json_encode([
         "status" => "success", 
         "teams" => $teams, 
-        "logos" => $logos // Return logos as a separate array
+        "logo" => $logos // Return logos as a separate array
     ]);
 } else {
     echo json_encode(["status" => "error", "message" => "No teams found for the user"]);

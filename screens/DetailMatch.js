@@ -53,15 +53,27 @@ const DetailMatch = () => {
         return !isNaN(number) && number > 0 && number <= 90;
     };
 
-    const arePredefinedOversDisabled = isValidCustomOvers(overs);
-    const isButtonEnabled = (isValidCustomOvers(overs) || selectedOver) && selectedTeam && tossWinner;
+    const handleSelectOver = (over) => {
+        setSelectedOver(selectedOver === over ? null : over);
+        setOvers('');
+    };
+
+    const handleCustomOversChange = (value) => {
+        setOvers(value);
+        if (isValidCustomOvers(value)) setSelectedOver(null);
+    };
+
+    const isButtonEnabled =
+    (isValidCustomOvers(overs) || selectedOver) && 
+    selectedTeam && 
+    tossWinner && 
+    team1 && 
+    team2;
+
 
     const AvsB = colors.background === '#333' ? require('../assets/icons/AvB.png') : require('../assets/icons/AvB.png');
     const userIcon = colors.background === '#333' ? require('../assets/icons/user_white.png') : require('../assets/icons/user.png');
 
-    const handleSelectOver = (over) => {
-        setSelectedOver(selectedOver === over ? null : over);
-    };
 
     const handleSelectTeam = (team) => {
         setSelectedTeam(selectedTeam === team ? null : team);
@@ -71,33 +83,20 @@ const DetailMatch = () => {
         setTossWinner(tossWinner === team ? null : team);
     };
 
-    // Ensure team1 and team2 are not the same
     const handleSelectTeam1 = (team) => {
-        if (team !== team2) {
+        if (team) {
             setTeam1(team);
-            setTeam1Id(team.id);
-        } else if (team === null) {
-            setTeam1(null); // Allow unselecting
-            setTeam1Id(null);
-        } else if (team != null) {
-            alert("Team 1 and Team 2 cannot be the same");
+            setTeam1Id(team.id); 
         }
     };
-
+    
     const handleSelectTeam2 = (team) => {
-        if (team !== team1) {
+        if (team) {
             setTeam2(team);
-            setTeam2Id(team.id);
-        }
-        else if (team === null) {
-            setTeam2(null); // Allow unselecting
-            setTeam2Id(null);
-        }
-        else if (team != null) {
-            alert("Team 1 and Team 2 cannot be the same");
-        }
+            setTeam2Id(team.id); 
+        } 
     };
-
+    
     const handleSubmit = async () => {
         const matchData = {
             team1Id: team1Id,
@@ -131,13 +130,7 @@ const DetailMatch = () => {
             alert('An error occurred while saving match details. Please try again.');
         }
     };
-    const handleSwapTeams = () => {
-        setTeam1(prev => {
-            const temp = team2;
-            setTeam2(prev);
-            return temp;
-        });
-    };
+   
     return (
         <ScrollView style={[MatchesStyle.container, { backgroundColor: colors.background }]}>
             <View style={MatchesStyle.header}>
@@ -174,12 +167,8 @@ const DetailMatch = () => {
                         <TouchableOpacity
                             key={over}
                             style={[MatchesStyle.oversCard, { borderColor: selectedOver === over ? 'orange' : '#E61717' }]}
-                            onPress={() => {
-                                if (!arePredefinedOversDisabled) {
-                                    handleSelectOver(over);
-                                }
-                            }}
-                            disabled={arePredefinedOversDisabled}
+                            onPress={() => handleSelectOver(over)}
+                            disabled={Boolean(overs)}
                         >
                             <View style={[MatchesStyle.addIconContainer]}>
                                 <Text style={MatchesStyle.overText}>{over}</Text>
@@ -196,8 +185,9 @@ const DetailMatch = () => {
                         placeholder="Enter Custom Overs Here"
                         placeholderTextColor={colors.text}
                         value={overs}
-                        onChangeText={setOvers}
+                        onChangeText={handleCustomOversChange}
                         keyboardType="numeric"
+                        editable={!selectedOver}
                     />
                 </View>
 
@@ -207,7 +197,9 @@ const DetailMatch = () => {
                     placeholder={{ label: 'Select Team 1', value: null }}
                     items={[
                         { label: 'None', value: null }, // Adding the "None" option for unselecting
-                        ...teams.map(team => ({ label: team.name, value: team })),
+                        ...teams
+                            .filter((team) => team !== team2) // Exclude the selected Team 2
+                            .map((team) => ({ label: team.name, value: team })),
                     ]}
                     onValueChange={handleSelectTeam1}
                     style={{
@@ -231,7 +223,9 @@ const DetailMatch = () => {
                     placeholder={{ label: 'Select Team 2', value: null }}
                     items={[
                         { label: 'None', value: null }, // Adding the "None" option for unselecting
-                        ...teams.map(team => ({ label: team.name, value: team })),
+                        ...teams
+                            .filter((team) => team !== team1) // Exclude the selected Team 1
+                            .map((team) => ({ label: team.name, value: team })),
                     ]}
                     onValueChange={handleSelectTeam2}
                     style={{
