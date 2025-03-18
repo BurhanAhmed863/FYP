@@ -79,6 +79,8 @@ const PlayerStats = ({ route, navigation }) => {
                     threeWickets: parseInt(data.three_wicket_hauls, 10) || 0, // Default to 0 if null or NaN
                     fiveWickets: parseInt(data.five_wicket_hauls, 10) || 0, // Default to 0 if null or NaN
                     Average: parseFloat(data.bowling_average) || 0.0, // Default to 0.0 if null or NaN
+                    whiteBalls: parseInt(data.white_ball_matches, 10) || 0, // ✅ White ball ka data handle kiya
+                    
                 };
                 
                 setBowlingStats(bowling);

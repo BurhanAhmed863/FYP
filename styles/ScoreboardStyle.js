@@ -118,7 +118,7 @@ const ScoreboardStyle = StyleSheet.create({
         paddingVertical: hp('0.5%'), // Adjusted padding for better spacing
     },
     batTxtH: {
-        fontSize: wp('7%'),
+        fontSize: wp('6.4%'),
         fontFamily: 'SignikaNegative-Bold',
         marginBottom: hp('3%'),
         top: hp('1.5%'),

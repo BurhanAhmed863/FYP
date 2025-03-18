@@ -1,7 +1,7 @@
 // apiConfig.js
 
 const apiConnection = {
-    apiIp: 'http://192.168.0.105/MatchMate',
+    apiIp: 'http://192.168.18.68/MatchMate',
 };
 
 export default apiConnection;

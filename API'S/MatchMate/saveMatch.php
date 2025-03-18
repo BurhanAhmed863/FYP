@@ -26,6 +26,7 @@ $overDetail = isset($input['over_detail']) ? json_encode($input['over_detail']) 
 $runsInOver = isset($input['total_runs_conceded']) ? json_encode($input['total_runs_conceded']) : ''; // Encode array as JSON
 $totalWickets = isset($input['total_wickets']) ? (int)$input['total_wickets'] : 0;
 $totalBallsBowled = isset($input['total_balls_bowled']) ? (int)$input['total_balls_bowled'] : 0;
+$totalNoBalls = isset($input['total_no_balls']) ? (int)$input['total_no_balls'] : 0; // New Field
 $economyRate = isset($input['economy_rate']) ? (float)$input['economy_rate'] : 0.0;
 $inning = isset($input['innings']) ? (int)$input['innings'] : 1;
 
@@ -37,13 +38,23 @@ if (empty($matchId) || empty($t_id) || empty($bowlerName)) {
 
 // Insert data into the database
 $query = "
-INSERT INTO bowleroverstats (m_id, t_id, bowler_name, over_detail, total_wickets, total_runs_conceded, total_balls_bowled, economy_rate, innings, user_id) 
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+INSERT INTO bowleroverstats (
+    m_id, t_id, bowler_name, over_detail, total_wickets, 
+    total_runs_conceded, total_balls_bowled, total_no_balls, 
+    economy_rate, innings, user_id
+) 
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 ";
 
 if ($stmt = mysqli_prepare($conn, $query)) {
     // Bind parameters
-    mysqli_stmt_bind_param($stmt, "iisssiiidi", $matchId, $t_id, $bowlerName, $overDetail, $runsInOver, $totalWickets, $totalBallsBowled, $economyRate, $inning, $userId);
+    mysqli_stmt_bind_param(
+        $stmt,
+        "iisssiiiidi",
+        $matchId, $t_id, $bowlerName, $overDetail, 
+        $totalWickets, $runsInOver, $totalBallsBowled, 
+        $totalNoBalls, $economyRate, $inning, $userId
+    );
 
     // Execute the query
     if (mysqli_stmt_execute($stmt)) {

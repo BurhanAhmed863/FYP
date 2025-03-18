@@ -10,6 +10,10 @@ import {
   Modal,
   Alert,
   Button,
+  StyleSheet,
+  Dimensions,
+  TouchableWithoutFeedback,
+  PanResponder,
 } from 'react-native';
 import { useTheme } from '../theme/ThemeContext'; // Assuming you have the theme context set up
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -22,6 +26,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import RNPickerSelect from 'react-native-picker-select';
 import apiConnection from './apiConnection';
 
+import Svg, { Circle, Rect, Line } from "react-native-svg"; // Import SVG elements
+
 const Scoreboard = ({ route }) => {
   const { colors } = useTheme(); // Get colors from theme context
   const navigation = useNavigation();
@@ -29,23 +35,14 @@ const Scoreboard = ({ route }) => {
   const [innings, setInnings] = useState(1);
   const [totalRunsFirstInnings, setTotalRunsFirstInnings] = useState(0);
   const [totalRunsSecondInnings, setTotalRunsSecondInnings] = useState(0);
-  const [
-    currentOverAndBallForFirstInnings,
-    setCurrentOverAndBallForFirstInnings,
-  ] = useState(0);
-  const [
-    currentOverAndBallForSecondInnings,
-    setCurrentOverAndBallForSecondInnings,
-  ] = useState(0);
+  const [currentOverAndBallForFirstInnings, setCurrentOverAndBallForFirstInnings,] = useState(0);
+  const [currentOverAndBallForSecondInnings, setCurrentOverAndBallForSecondInnings,] = useState(0);
   const [prevBatsman, setPrevBatsman] = useState(null); // Store the recently out batsman
   const [totalOvers, setTotalOvers] = useState('');
-  const [totalWicketsInFirstInnings, setTotalWicketsInFirstInnings] =
-    useState(0);
-  const [totalWicketsInSecondInnings, setTotalWicketsInSecondInnings] =
-    useState(0);
+  const [totalWicketsInFirstInnings, setTotalWicketsInFirstInnings] = useState(0);
+  const [totalWicketsInSecondInnings, setTotalWicketsInSecondInnings] = useState(0);
   const [modalVisible, setModalVisible] = useState(true); // Modal is initially shown
-  const [sendResultToAPICondition, setSendResultToAPICondition] =
-    useState(false); // Modal is initially shown
+  const [sendResultToAPICondition, setSendResultToAPICondition] = useState(false); // Modal is initially shown
   const [selectedBatsman1, setSelectedBatsman1] = useState(null);
   const [selectedBatsman2, setSelectedBatsman2] = useState(null);
   const [players, setPlayers] = useState([]);
@@ -57,8 +54,7 @@ const Scoreboard = ({ route }) => {
   const [selectedNoBallRuns, setSelectedNoBallRuns] = useState(0); // Selected runs on no-ball
   const [isWideModalVisible, setIsWideModalVisible] = useState(false);
   const [isExtrasModalVisible, setIsExtrasModalVisible] = useState(false);
-  const [isByesLegByesModalVisible, setIsByesLegByesModalVisible] =
-    useState(false);
+  const [isByesLegByesModalVisible, setIsByesLegByesModalVisible] = useState(false);
   const [selectedByesLegByes, setSelectedByesLegByes] = useState(0); // Selected runs on no-ball
   const [selectedWideRuns, setSelectedWideRuns] = useState(0); // Selected runs on no-ball
   const [selectedExtraType, setSelectedExtraType] = useState(null); // "Byes", "Legbyes", or "None"
@@ -79,13 +75,21 @@ const Scoreboard = ({ route }) => {
   const [countRunsInOver, setCountRunsInOver] = useState(); // e.g. [1, 2, 6, 4, ...]
   const [bowlingTeamId, setBowlingTeamId] = useState(null); // e.g. [1, 2, 6, 4, ...]
   const [battingTeamId, setBattingTeamId] = useState(null); // e.g. [1, 2, 6, 4, ...]
-  const [dismissedBatsmen1, setDismissedBatsmen1] = useState(0); // e.g. [1, 2, 6, 4, ...]
-  const [dismissedBatsmen2, setDismissedBatsmen2] = useState(0); // e.g. [1, 2, 6, 4, ...]
   const dismissedBatsmen1Ref = useRef(0); // Ref for dismissed batsman 1
   const dismissedBatsmen2Ref = useRef(0); // Ref for dismissed batsman 2
   const dismissedBatsmenIds = useRef([]);
   const [isBowlerStateUpdated, setIsBowlerStateUpdated] = useState(false);
   const [isStadiumModalVisible, setIsStadiumModalVisible] = useState(false);
+  const [firstInningCRR, setFirstInningCRR] = useState(0);
+  const [secondInningCRR, setSecondInningCRR] = useState(0);
+  const [projectedScore, setProjectedScore] = useState(0);
+  const [requiredRunRate, setRequiredRunRate] = useState(0);
+  const [selectedRuns, setSelectedRuns] = useState(null);
+  const currentBatsman = selectedBatsman; // Yeh already correct batsman hold kar raha hai
+  const [batsman1Shots, setBatsman1Shots] = useState([]);
+  const [batsman2Shots, setBatsman2Shots] = useState([]);
+
+
 
   useEffect(() => {
     if (isBowlerStateUpdated) {
@@ -103,6 +107,37 @@ const Scoreboard = ({ route }) => {
   useEffect(() => {
     totalRunsFirstInnings;
   }, [totalRunsFirstInnings]);
+
+  // Calculate CRR Based on Current Inning
+  useEffect(() => {
+    if (innings === 1) {
+      setFirstInningCRR((totalRunsFirstInnings / currentOverAndBallForFirstInnings).toFixed(2));
+    } else if (innings === 2) {
+      setSecondInningCRR((totalRunsSecondInnings / currentOverAndBallForSecondInnings).toFixed(2));
+    }
+  }, [totalRunsFirstInnings, currentOverAndBallForFirstInnings, currentOverAndBallForSecondInnings, totalRunsSecondInnings]);
+
+
+  // Calculate Projected Score for First Inning
+  useEffect(() => {
+    const remainingOvers = totalOvers - currentOver;
+    if (currentOverAndBallForFirstInnings > 0) {
+      const projected = Math.round(
+        totalRunsFirstInnings + (firstInningCRR * remainingOvers)
+      );
+      setProjectedScore(projected);
+    }
+  }, [firstInningCRR, totalRunsFirstInnings, currentOver]);
+
+  // Calculate Required Run Rate (RRR) for Second Inning
+  useEffect(() => {
+    const remainingOversSec = totalOvers - currentOver2ndInnings;
+    if (remainingOversSec > 0) {
+      const rrr = (totalRunsFirstInnings - (totalRunsSecondInnings / remainingOversSec));
+      setRequiredRunRate(rrr.toFixed(2));
+    }
+  }, [totalRunsFirstInnings, totalRunsSecondInnings, currentOver2ndInnings]);
+
 
   const handleOverComplete = async () => {
     try {
@@ -1600,9 +1635,11 @@ const Scoreboard = ({ route }) => {
     // setTotalRunsFirstInnings((prevRuns) => prevRuns + runs + 1); // Add runs + 1 for the no-ball
     if (innings == 1) {
       setTotalRunsFirstInnings(prevRuns => prevRuns + runs + 1);
+      //logic noball
     }
     if (innings == 2) {
       setTotalRunsSecondInnings(prevRuns => prevRuns + runs + 1);
+      updateBowlerStats(runs + 1, false, true, isExtraType, runs + 1);
     }
     // Update bowler stats for the no-ball
 
@@ -1790,31 +1827,162 @@ const Scoreboard = ({ route }) => {
     console.log(`${runs} recorded as extras ${isExtraType}`);
   };
 
+
+
+
+  const fieldingPositions = {
+    "3rd Man": { x1: 150, y1: 150, x2: 120, y2: 50 },  // Top-Left (Fine Edge)
+    "Fine Leg": { x1: 150, y1: 150, x2: 180, y2: 50 },  // Top-Right (Fine Edge)
+    "Long On": { x1: 150, y1: 150, x2: 170, y2: 270 },  // Bottom-Center
+    "Long Off": { x1: 150, y1: 150, x2: 130, y2: 270 },  // Top-Center
+    "Mid On": { x1: 150, y1: 150, x2: 160, y2: 220 },  // Near Bottom
+    "Mid Off": { x1: 150, y1: 150, x2: 140, y2: 80 },  // Near Top
+    "Cover": { x1: 150, y1: 150, x2: 110, y2: 130 },  // Left Side (Extra Cover Area)
+    "Extra Cover": { x1: 150, y1: 150, x2: 90, y2: 140 },  // More Left
+    "Point": { x1: 150, y1: 150, x2: 60, y2: 160 },  // Extreme Left (Backward Point)
+    "Square Leg": { x1: 150, y1: 150, x2: 240, y2: 160 },  // Right Side
+    "Mid Wicket": { x1: 150, y1: 150, x2: 180, y2: 190 },  // Near Right
+    "Deep Mid Wicket": { x1: 150, y1: 150, x2: 230, y2: 220 },  // Outer Right
+    "Deep Square": { x1: 150, y1: 150, x2: 240, y2: 130 },  // Deep Right
+    "Deep Extra Cover": { x1: 150, y1: 150, x2: 60, y2: 120 },  // Deep Left
+  };
+
+  const getCurrentBatsman = () => {
+    return selectedBatsman?.id === selectedBatsman1?.id ? "batsman1" : "batsman2";
+  };
+
+  // Runs ke Mutabiq Line Color
+  const getStrokeColor = (runs) => {
+    switch (runs) {
+      case 1: return "blue";
+      case 2: return "green";
+      case 3: return "yellow";
+      case 4: return "orange";
+      case 5: return "purple";
+      case 6: return "red";
+      default: return "gray";
+    }
+  };
+  // // Button Click -> Line Draw   (yh wala sahi tha)
+  // const handleDrawShot = (runs, position) => {
+  //   if (fieldingPositions[position]) {
+  //     const newLine = { ...fieldingPositions[position], color: getStrokeColor(runs) };
+  //     setLines([...lines, newLine]); // Save Line
+  //   }
+  // };
+
+
+  // Button Click -> Shot Draw aur Batsman ka data save
+  const handleDrawShot = (runs, position) => {
+    if (fieldingPositions[position]) {
+      const newLine = { ...fieldingPositions[position], color: getStrokeColor(runs) };
+
+      if (selectedBatsman === selectedBatsman1) {
+        setBatsman1Shots([...batsman1Shots, newLine]);
+      } else {
+        setBatsman2Shots([...batsman2Shots, newLine]);
+      }
+    }
+  };
+
   const renderStadiumModal = () => (
     <Modal visible={isStadiumModalVisible} transparent animationType="slide">
-      <View style={ScoreboardStyle.modalContainer}>
-        <RNPickerSelect
-          onValueChange={value => {
-            setIsStadiumModalVisible(false);
-          }}
-          items={[
-            { label: 'Long On', value: 'Long On' },
-            { label: 'Long Off', value: 'Long Off' },
-            { label: 'Mid On', value: 'Mid On' },
-            { label: 'Mid Off', value: 'Mid Off' },
-            { label: 'Cover', value: 'Cover' },
-            { label: 'Square Leg', value: 'Square Leg' },
-            { label: 'Point', value: 'Point' },
-            { label: 'Fine Leg', value: 'Fine Leg' },
-          ]}
-          placeholder={{ label: 'Select Stadium Side', value: null }}
+      <View style={wstyles.modalContainer}>
+
+
+        <Text style={[wstyles.modalHeader]}>
+          Select Fielding Position
+        </Text>
+
+        <Text style={wstyles.modalHeader}>
+          {getCurrentBatsman() === "batsman2" ? selectedBatsman1.name : selectedBatsman2.name}'s Wagon Wheel
+        </Text>
+        <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
+          {/* SVG Wagon Wheel */}
+          <Svg height="300" width="300" viewBox="0 0 300 300">
+            {/* Stadium Outer Boundary */}
+            <Circle cx="150" cy="150" r="140" stroke="black" strokeWidth="2" fill="lightgreen" />
+
+            {/* Pitch Rectangle */}
+            <Rect x="135" y="120" width="30" height="60" fill="brown" />
+
+
+            {/* Draw Shots Only for Active Batsman */}
+            {(getCurrentBatsman() === "batsman1" ? batsman1Shots : batsman2Shots).map((shot, index) => (
+              <Line key={index}
+                x1={shot.x1}
+                y1={shot.y1}
+                x2={shot.x2}
+                y2={shot.y2}
+                stroke={shot.color}
+                strokeWidth="3" />
+            ))}
+          </Svg>
+
+        </View>
+        <View style={wstyles.fieldingPositionsContainer}>
+          {[
+            '3rd Man',
+            'Fine Leg',
+            'Long On',
+            'Long Off',
+            'Mid On',
+            'Mid Off',
+            'Cover',
+            'Extra Cover',
+            'Point',
+            'Square Leg',
+            'Mid Wicket',
+            'Deep Mid Wicket',
+            'Deep Square',
+            'Deep Extra Cover',
+          ].map((position) => (
+            <TouchableOpacity
+              key={position}
+              style={wstyles.positionButton}
+              onPress={() => handlePositionSelection(position)
+
+              }
+            >
+              <Text style={wstyles.positionButtonText}>{position}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <Button
+          title="Cancel"
+          onPress={() => setIsStadiumModalVisible(false)}
         />
+
       </View>
     </Modal>
   );
 
-  const handleStadiumModalPress = () => {
-    setIsStadiumModalVisible(true);
+  // const handleFieldPositionSelect = (position) => {
+  //   setSelectedPosition(position); // Save position
+  //   if (selectedRuns !== null) { // Ensure runs are selected
+  //     handleDrawShot(selectedRuns, position); // Draw line
+  //     setSelectedRuns(null); // Reset after drawing
+  //   }
+  //   setIsStadiumModalVisible(false); // Close modal
+  // };
+
+  // const handleStadiumModalPress = () => {
+  //   setIsStadiumModalVisible(true);
+  // };
+
+
+
+  const handleRunSelection = (runs) => {
+    setSelectedRuns(runs);
+    setIsStadiumModalVisible(true); // Modal open ho
+  };
+
+  const handlePositionSelection = (position) => {
+    if (selectedRuns !== null) {
+      handleDrawShot(selectedRuns, position); // Runs + Position pass karo
+      setSelectedRuns(null); // Reset runs
+      //setIsStadiumModalVisible(false); // Modal band karo
+    }
   };
 
   useEffect(() => {
@@ -1949,12 +2117,16 @@ const Scoreboard = ({ route }) => {
       fetchMatchData(matchId);
     }
   }, [matchId]);
-
   useEffect(() => {
     if (innings === 2) {
       setModalVisible(true); // Open modal for the second innings
+  
+      // Reset both batsmen's shots
+      setBatsman1Shots([]);
+      setBatsman2Shots([]);
     }
   }, [innings]);
+  
 
   useEffect(() => {
     if (matchId) {
@@ -1982,12 +2154,17 @@ const Scoreboard = ({ route }) => {
   const handleWicketPress = () => {
     if (selectedBatsman) {
       setIsWicketModalVisible(true); // Show the modal if a batsman is selected
+
+      // Reset data for the out batsman
+      if (selectedBatsman?.id === selectedBatsman1?.id) {
+        setBatsman2Shots([]); // Clear Batsman 1's shots
+      } else {
+        setBatsman1Shots([]); // Clear Batsman 2's shots
+      }
     } else {
-      // Optionally, show an alert or handle the case where no batsman is selected
       alert('Please select a batsman first');
     }
   };
-
   useEffect(() => {
     console.log(wicketType);
   }, [wicketType]);
@@ -2598,20 +2775,50 @@ const Scoreboard = ({ route }) => {
           <View style={ScoreboardStyle.centeredContent}>
             <View style={ScoreboardStyle.RRtextContainer}>
               {/* Current Run Rate and Projected Score */}
-              <View style={ScoreboardStyle.crrContainer}>
-                <Text style={[ScoreboardStyle.crrText, { color: 'black' }]}>
-                  Current Run rate:
-                </Text>
-                <Text style={ScoreboardStyle.crrNumber}>36.00</Text>
+              <View>
+                {/* First Inning CRR (Visible Only in First Inning) */}
+                {innings === 1 && (
+                  <View style={ScoreboardStyle.crrContainer}>
+                    <Text style={[ScoreboardStyle.crrText, { color: "black" }]}>
+                      First Inning CRR:
+                    </Text>
+                    <Text style={ScoreboardStyle.crrNumber}>{firstInningCRR}</Text>
+                  </View>
+                )}
+
+                {/* Second Inning CRR (Visible Only in Second Inning) */}
+                {innings === 2 && (
+                  <View style={ScoreboardStyle.crrContainer}>
+                    <Text style={[ScoreboardStyle.crrText, { color: "black" }]}>
+                      Second Inning CRR:
+                    </Text>
+                    <Text style={ScoreboardStyle.crrNumber}>{secondInningCRR}</Text>
+                  </View>
+                )}
               </View>
 
-              <View style={ScoreboardStyle.crrContainer}>
-                <Text style={[ScoreboardStyle.crrText, { color: 'black' }]}>
-                  Projected Score:
-                </Text>
-                <Text style={ScoreboardStyle.crrNumber}>100</Text>
+              {innings === 1 && (
+                <View style={ScoreboardStyle.crrContainer}>
+                  <Text style={[ScoreboardStyle.crrText, { color: "black" }]}>
+                    Projected Score:
+                  </Text>
+                  <Text style={ScoreboardStyle.crrNumber}>{projectedScore}</Text>
+                </View>
+              )}
+
+              <View>
+                {/* Second Inning RRR (Visible Only in Second Inning) */}
+                {innings === 2 && (
+                  <View style={ScoreboardStyle.crrContainer}>
+                    <Text style={[ScoreboardStyle.crrText, { color: "black" }]}>
+                      Required Run Rate (RRR):
+                    </Text>
+                    <Text style={ScoreboardStyle.crrNumber}>{requiredRunRate}</Text>
+                  </View>
+                )}
               </View>
             </View>
+
 
             {/* Line Divider */}
             <View style={ScoreboardStyle.line}></View>
@@ -2866,7 +3073,9 @@ const Scoreboard = ({ route }) => {
                 <TouchableOpacity
                   style={ScoreboardStyle.oversCard}
                   onPress={() => {
-                    handleStadiumModalPress(0, false, false);
+
+
+                    //handleStadiumModalPress(0, false, false);
                     if (innings == 1) {
                       updateScore(0, false, false);
                     }
@@ -2882,7 +3091,8 @@ const Scoreboard = ({ route }) => {
                 <TouchableOpacity
                   style={ScoreboardStyle.oversCard}
                   onPress={() => {
-                    handleStadiumModalPress();
+                    handleRunSelection(1)
+                    //handleStadiumModalPress(); // Open modal
                     if (innings == 1) {
                       updateScore(1, false, false);
                     }
@@ -2898,7 +3108,8 @@ const Scoreboard = ({ route }) => {
                 <TouchableOpacity
                   style={ScoreboardStyle.oversCard}
                   onPress={() => {
-                    handleStadiumModalPress();
+                    handleRunSelection(2)
+                    // handleStadiumModalPress(); // Open modal
                     if (innings == 1) {
                       updateScore(2, false, false);
                     }
@@ -2914,7 +3125,8 @@ const Scoreboard = ({ route }) => {
                 <TouchableOpacity
                   style={ScoreboardStyle.oversCard}
                   onPress={() => {
-                    handleStadiumModalPress();
+                    handleRunSelection(3) // Save runs for modal
+                    //handleStadiumModalPress(); // Open modal
                     if (innings == 1) {
                       updateScore(3, false, false);
                     }
@@ -2944,7 +3156,8 @@ const Scoreboard = ({ route }) => {
                 <TouchableOpacity
                   style={ScoreboardStyle.oversCard}
                   onPress={() => {
-                    handleStadiumModalPress();
+                    handleRunSelection(4)
+                    // handleStadiumModalPress();
                     if (innings == 1) {
                       updateScore(4, false, false);
                     }
@@ -2960,7 +3173,8 @@ const Scoreboard = ({ route }) => {
                 <TouchableOpacity
                   style={ScoreboardStyle.oversCard}
                   onPress={() => {
-                    handleStadiumModalPress();
+                    handleRunSelection(5)
+                    //handleStadiumModalPress();
                     if (innings == 1) {
                       updateScore(5, false, false);
                     }
@@ -2976,7 +3190,8 @@ const Scoreboard = ({ route }) => {
                 <TouchableOpacity
                   style={ScoreboardStyle.oversCard}
                   onPress={() => {
-                    handleStadiumModalPress();
+                    handleRunSelection(6)
+                    //handleStadiumModalPress();
                     if (innings == 1) {
                       updateScore(6, false, false);
                     }
@@ -2999,7 +3214,8 @@ const Scoreboard = ({ route }) => {
                     },
                   ]}
                   onPress={() => {
-                    handleStadiumModalPress();
+                    handleRunSelection(7)
+                    //handleStadiumModalPress();
                     if (innings == 1) {
                       updateScore(7, false, false);
                     }
@@ -3201,5 +3417,50 @@ const Scoreboard = ({ route }) => {
     </ScrollView>
   );
 };
+
+const wstyles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: '90%', // Adjusted to fit most phone screens
+    maxWidth: 400, // Maximum width for larger screens
+    backgroundColor: 'white',
+    padding: 15, // Reduced padding for better space utilization
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalHeader: {
+    fontSize: 18,
+    fontWeight: "500",
+    fontFamily: 'SignikaNegative-Regular',
+    textAlign: 'center', // Center-align the header text
+    color: "white",
+  },
+
+  fieldingPositionsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginBottom: 10, // Added margin for better spacing
+  },
+  positionButton: {
+    padding: 8, // Reduced padding for smaller buttons
+    margin: 4, // Reduced margin for better spacing
+    backgroundColor: '#f79e1b',
+    borderRadius: 5,
+    minWidth: 80, // Minimum width for buttons
+    alignItems: 'center', // Center-align button text
+  },
+  positionButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 14, // Reduced font size for better fit
+  },
+});
+
 
 export default Scoreboard;
