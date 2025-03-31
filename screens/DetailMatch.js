@@ -194,9 +194,9 @@ const DetailMatch = () => {
                 {/* Dropdowns for Team Selection */}
                 <Text style={[MatchesStyle.overHeader, { color: "orange" }]}>Select Team 1</Text>
                 <RNPickerSelect
-                    placeholder={{ label: 'Select Team 1', value: null }}
+                    placeholder={{ label: 'Select Team 1', value: '' }}
                     items={[
-                        { label: 'None', value: null }, // Adding the "None" option for unselecting
+                        { label: 'None', value: '' }, // Adding the "None" option for unselecting
                         ...teams
                             .filter((team) => team !== team2) // Exclude the selected Team 2
                             .map((team) => ({ label: team.name, value: team })),
@@ -220,9 +220,9 @@ const DetailMatch = () => {
 
                 <Text style={[MatchesStyle.overHeader, { color: "orange" }]}>Select Team 2</Text>
                 <RNPickerSelect
-                    placeholder={{ label: 'Select Team 2', value: null }}
+                    placeholder={{ label: 'Select Team 2', value: '' }}
                     items={[
-                        { label: 'None', value: null }, // Adding the "None" option for unselecting
+                        { label: 'None', value: '' }, // Adding the "None" option for unselecting
                         ...teams
                             .filter((team) => team !== team1) // Exclude the selected Team 1
                             .map((team) => ({ label: team.name, value: team })),
