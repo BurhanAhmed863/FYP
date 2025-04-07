@@ -259,79 +259,57 @@ const Scoreboard = ({route}) => {
     }
   };
 
-  const sendBatsmenDataToBackend = async overNumber => {
+  const sendBatsmenDataToBackend = async (overNumber) => {
     const batsmenData = [
       {
         batsman_name: selectedBatsman1.name,
-        runs_scored: Array.isArray(selectedBatsman1.ballRuns)
-          ? selectedBatsman1.ballRuns.reduce((sum, ballRun) => sum + ballRun, 0)
-          : 0,
+        runs_scored: selectedBatsman1.ballRuns.reduce((sum, ballRun) => sum + ballRun, 0),
         balls_faced: selectedBatsman1.ballRuns.length,
-        strike_rate:
-          ((Array.isArray(selectedBatsman1.ballRuns)
-            ? selectedBatsman1.ballRuns.reduce(
-                (sum, ballRun) => sum + ballRun,
-                0,
-              )
-            : 0) /
-            selectedBatsman1.ballRuns.length) *
-          100,
+        strike_rate: (selectedBatsman1.ballRuns.reduce((sum, ballRun) => sum + ballRun, 0) / selectedBatsman1.ballRuns.length) * 100,
         fours: selectedBatsman1.fours,
         sixes: selectedBatsman1.sixes,
         ones: selectedBatsman1.ones,
         twos: selectedBatsman1.twos,
         threes: selectedBatsman1.threes,
         dots: selectedBatsman1.dots,
-        ball_runs: selectedBatsman1.ballRuns, // Add ball-by-ball data
+        ball_runs: selectedBatsman1.ballRuns,  // No need to stringify this
+        run_positions: selectedBatsman1.runPositions,  // No need to stringify this
         over_number: overNumber,
         dismissed: dismissedBatsmen1Ref.current,
       },
       {
         batsman_name: selectedBatsman2.name,
-        runs_scored: Array.isArray(selectedBatsman2.ballRuns)
-          ? selectedBatsman2.ballRuns.reduce((sum, ballRun) => sum + ballRun, 0)
-          : 0,
+        runs_scored: selectedBatsman2.ballRuns.reduce((sum, ballRun) => sum + ballRun, 0),
         balls_faced: selectedBatsman2.ballRuns.length,
-        strike_rate:
-          ((Array.isArray(selectedBatsman2.ballRuns)
-            ? selectedBatsman2.ballRuns.reduce(
-                (sum, ballRun) => sum + ballRun,
-                0,
-              )
-            : 0) /
-            selectedBatsman2.ballRuns.length) *
-          100,
+        strike_rate: (selectedBatsman2.ballRuns.reduce((sum, ballRun) => sum + ballRun, 0) / selectedBatsman2.ballRuns.length) * 100,
         fours: selectedBatsman2.fours,
         sixes: selectedBatsman2.sixes,
         ones: selectedBatsman2.ones,
         twos: selectedBatsman2.twos,
         threes: selectedBatsman2.threes,
         dots: selectedBatsman2.dots,
-        ball_runs: selectedBatsman2.ballRuns, // Add ball-by-ball data
+        ball_runs: selectedBatsman2.ballRuns,  // No need to stringify this
+        run_positions: selectedBatsman2.runPositions,  // No need to stringify this
         over_number: overNumber,
         dismissed: dismissedBatsmen2Ref.current,
-      },
+      }
     ];
-
+  
     try {
-      const response = await fetch(
-        `${apiConnection.apiIp}/batsmenBallData.php`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            match_id: matchId,
-            team_id: battingTeamId,
-            batsmen: batsmenData,
-            innings: innings,
-          }),
+      const response = await fetch(`${apiConnection.apiIp}/batsmenBallData.php`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+        body: JSON.stringify({
+          match_id: matchId,
+          team_id: battingTeamId,
+          batsmen: batsmenData,
+          innings: innings,
+        }),
+      });
       const resultText = await response.text();
       console.log('BATSMEN DATA:: ', batsmenData);
-      // console.log("Raw response:", resultText);
       const result = JSON.parse(resultText);
       if (result.status === 'success') {
         console.log('Batsmen data saved successfully');
@@ -342,6 +320,7 @@ const Scoreboard = ({route}) => {
       console.error('Network error while saving batsmen data:', error);
     }
   };
+  
 
   const updateScore = (runs, isWicket = false, isExtra = false) => {
     if (innings == 1) {
@@ -1597,6 +1576,7 @@ const Scoreboard = ({route}) => {
           : selectedBatsman1,
       );
     }
+
     // Update batsman or extras
     if (extraType === 'None') {
       // Add runs to batsman's score
@@ -1617,6 +1597,10 @@ const Scoreboard = ({route}) => {
           setSelectedBatsman1(prevBatsman => {
             const updatedBatsman = {...prevBatsman};
             updatedBatsman.runs += runs;
+            updatedBatsman.balls += 1;
+            updatedBatsman.ballRuns.push(runs);
+            updatedBatsman.strikeRate =
+              (updatedBatsman.runs / updatedBatsman.balls) * 100;
             if (runs === 6) {
               updatedBatsman.sixes += 1;
             }
@@ -1629,6 +1613,10 @@ const Scoreboard = ({route}) => {
           setSelectedBatsman2(prevBatsman => {
             const updatedBatsman = {...prevBatsman};
             updatedBatsman.runs += runs;
+            updatedBatsman.balls += 1;
+            updatedBatsman.ballRuns.push(runs);
+            updatedBatsman.strikeRate =
+              (updatedBatsman.runs / updatedBatsman.balls) * 100;
             if (runs === 6) {
               updatedBatsman.sixes += 1;
             }
@@ -1652,7 +1640,29 @@ const Scoreboard = ({route}) => {
       if (innings == 2) {
         updateBowlerStatsForSeconInnings(1, false, true, isExtraType, runs + 1);
       }
+
       // console.log(`${runs} ${isExtraType} recorded.`);
+      if (selectedBatsman) {
+        if (selectedBatsman.name === selectedBatsman1.name) {
+          setSelectedBatsman1(prevBatsman => {
+            const updatedBatsman = {...prevBatsman};
+            updatedBatsman.balls += 1;
+            updatedBatsman.ballRuns.push(0);
+            updatedBatsman.strikeRate =
+              (updatedBatsman.runs / updatedBatsman.balls) * 100;
+            return updatedBatsman;
+          });
+        } else if (selectedBatsman.name === selectedBatsman2.name) {
+          setSelectedBatsman2(prevBatsman => {
+            const updatedBatsman = {...prevBatsman};
+            updatedBatsman.balls += 1;
+            updatedBatsman.ballRuns.push(0);
+            updatedBatsman.strikeRate =
+              (updatedBatsman.runs / updatedBatsman.balls) * 100;
+            return updatedBatsman;
+          });
+        }
+      }
     }
   };
 
@@ -1916,6 +1926,20 @@ const Scoreboard = ({route}) => {
 
   const handlePositionSelection = position => {
     if (selectedRuns !== null) {
+      if (selectedBatsman.name === selectedBatsman1.name) {
+        setSelectedBatsman1(prevBatsman => {
+          const updatedBatsman = {...prevBatsman};
+          updatedBatsman.runPositions.push(position);
+          return updatedBatsman;
+        });
+      } else if (selectedBatsman.name === selectedBatsman2.name) {
+        setSelectedBatsman2(prevBatsman => {
+          const updatedBatsman = {...prevBatsman};
+          updatedBatsman.runPositions.push(position);
+          return updatedBatsman;
+        });
+      }
+
       handleDrawShot(selectedRuns, position); // Runs + Position pass karo
       setSelectedRuns(null); // Reset runs
     }
@@ -1973,6 +1997,7 @@ const Scoreboard = ({route}) => {
               dismissed: 0,
               wicket_type: 'Not Out',
               ballRuns: [],
+              runPositions: [],
             }));
 
           const validBowlers = (data.bowling_team || [])
@@ -2019,6 +2044,7 @@ const Scoreboard = ({route}) => {
               dismissed: 0,
               wicket_type: 'Not Out',
               ballRuns: [],
+              runPositions: [],
             }));
 
           const validBowlers = (data.batting_team || [])
@@ -2087,9 +2113,9 @@ const Scoreboard = ({route}) => {
 
       // Reset data for the out batsman
       if (selectedBatsman?.id === selectedBatsman1?.id) {
-        setBatsman2Shots([]); // Clear Batsman 1's shots
+        setBatsman2Shots([]);
       } else {
-        setBatsman1Shots([]); // Clear Batsman 2's shots
+        setBatsman1Shots([]);
       }
     } else {
       alert('Please select a batsman first');
@@ -2098,9 +2124,6 @@ const Scoreboard = ({route}) => {
 
   const handleWicketSelection = type => {
     setWicketType(type + 'by' + selectedBowler.name);
-    // setWicketType(type + '.' + selectedBowler.name);
-    // console.log(wicketType)
-    // console.log(`${runs} recorded as extras ${isExtraType}`);
     setIsConfirmModalVisible(true); // Show the confirmation modal
   };
 
@@ -3015,6 +3038,7 @@ const Scoreboard = ({route}) => {
                 <TouchableOpacity
                   style={ScoreboardStyle.oversCard}
                   onPress={() => {
+                    handleRunSelection(0);
                     //handleStadiumModalPress(0, false, false);
                     if (innings == 1) {
                       updateScore(0, false, false);
