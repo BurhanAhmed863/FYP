@@ -1,5 +1,5 @@
 // src/screens/Login.js
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -15,8 +15,8 @@ import {
   TouchableWithoutFeedback,
   PanResponder,
 } from 'react-native';
-import {useTheme} from '../theme/ThemeContext'; // Assuming you have the theme context set up
-import {useNavigation, useRoute} from '@react-navigation/native';
+import { useTheme } from '../theme/ThemeContext'; // Assuming you have the theme context set up
+import { useNavigation, useRoute } from '@react-navigation/native';
 import ScoreboardStyle from '../styles/ScoreboardStyle';
 import Icon from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -26,32 +26,23 @@ import LinearGradient from 'react-native-linear-gradient';
 import RNPickerSelect from 'react-native-picker-select';
 import apiConnection from './apiConnection';
 
-import Svg, {Circle, Rect, Line} from 'react-native-svg'; // Import SVG elements
+import Svg, { Circle, Rect, Line } from "react-native-svg"; // Import SVG elements
 
-const Scoreboard = ({route}) => {
-  const {colors} = useTheme(); // Get colors from theme context
+const Scoreboard = ({ route }) => {
+  const { colors } = useTheme(); // Get colors from theme context
   const navigation = useNavigation();
-  const {matchId} = route.params;
+  const { matchId } = route.params;
   const [innings, setInnings] = useState(1);
   const [totalRunsFirstInnings, setTotalRunsFirstInnings] = useState(0);
   const [totalRunsSecondInnings, setTotalRunsSecondInnings] = useState(0);
-  const [
-    currentOverAndBallForFirstInnings,
-    setCurrentOverAndBallForFirstInnings,
-  ] = useState(0);
-  const [
-    currentOverAndBallForSecondInnings,
-    setCurrentOverAndBallForSecondInnings,
-  ] = useState(0);
+  const [currentOverAndBallForFirstInnings, setCurrentOverAndBallForFirstInnings,] = useState(0);
+  const [currentOverAndBallForSecondInnings, setCurrentOverAndBallForSecondInnings,] = useState(0);
   const [prevBatsman, setPrevBatsman] = useState(null); // Store the recently out batsman
   const [totalOvers, setTotalOvers] = useState('');
-  const [totalWicketsInFirstInnings, setTotalWicketsInFirstInnings] =
-    useState(0);
-  const [totalWicketsInSecondInnings, setTotalWicketsInSecondInnings] =
-    useState(0);
+  const [totalWicketsInFirstInnings, setTotalWicketsInFirstInnings] = useState(0);
+  const [totalWicketsInSecondInnings, setTotalWicketsInSecondInnings] = useState(0);
   const [modalVisible, setModalVisible] = useState(true); // Modal is initially shown
-  const [sendResultToAPICondition, setSendResultToAPICondition] =
-    useState(false); // Modal is initially shown
+  const [sendResultToAPICondition, setSendResultToAPICondition] = useState(false); // Modal is initially shown
   const [selectedBatsman1, setSelectedBatsman1] = useState(null);
   const [selectedBatsman2, setSelectedBatsman2] = useState(null);
   const [players, setPlayers] = useState([]);
@@ -63,8 +54,7 @@ const Scoreboard = ({route}) => {
   const [selectedNoBallRuns, setSelectedNoBallRuns] = useState(0); // Selected runs on no-ball
   const [isWideModalVisible, setIsWideModalVisible] = useState(false);
   const [isExtrasModalVisible, setIsExtrasModalVisible] = useState(false);
-  const [isByesLegByesModalVisible, setIsByesLegByesModalVisible] =
-    useState(false);
+  const [isByesLegByesModalVisible, setIsByesLegByesModalVisible] = useState(false);
   const [selectedByesLegByes, setSelectedByesLegByes] = useState(0); // Selected runs on no-ball
   const [selectedWideRuns, setSelectedWideRuns] = useState(0); // Selected runs on no-ball
   const [selectedExtraType, setSelectedExtraType] = useState(null); // "Byes", "Legbyes", or "None"
@@ -99,6 +89,8 @@ const Scoreboard = ({route}) => {
   const [batsman1Shots, setBatsman1Shots] = useState([]);
   const [batsman2Shots, setBatsman2Shots] = useState([]);
 
+
+
   useEffect(() => {
     if (isBowlerStateUpdated) {
       handleOverComplete(); // Run only after the state is updated
@@ -106,32 +98,32 @@ const Scoreboard = ({route}) => {
     }
   }, [isBowlerStateUpdated]); // Dependency array ensures this runs only when the flag changes
 
+  // console.log('Selected Batsmen 1', selectedBatsman1)
+  // console.log('Selected Batsmen 2', selectedBatsman2)
+  useEffect(() => {
+    totalRunsFirstInnings, totalWicketsInFirstInnings;
+  }, [totalRunsFirstInnings, totalWicketsInFirstInnings]);
+
+  useEffect(() => {
+    totalRunsFirstInnings;
+  }, [totalRunsFirstInnings]);
+
   // Calculate CRR Based on Current Inning
   useEffect(() => {
     if (innings === 1) {
-      setFirstInningCRR(
-        (totalRunsFirstInnings / currentOverAndBallForFirstInnings).toFixed(2),
-      );
+      setFirstInningCRR((totalRunsFirstInnings / currentOverAndBallForFirstInnings).toFixed(2));
     } else if (innings === 2) {
-      setSecondInningCRR(
-        (totalRunsSecondInnings / currentOverAndBallForSecondInnings).toFixed(
-          2,
-        ),
-      );
+      setSecondInningCRR((totalRunsSecondInnings / currentOverAndBallForSecondInnings).toFixed(2));
     }
-  }, [
-    totalRunsFirstInnings,
-    currentOverAndBallForFirstInnings,
-    currentOverAndBallForSecondInnings,
-    totalRunsSecondInnings,
-  ]);
+  }, [totalRunsFirstInnings, currentOverAndBallForFirstInnings, currentOverAndBallForSecondInnings, totalRunsSecondInnings]);
+
 
   // Calculate Projected Score for First Inning
   useEffect(() => {
     const remainingOvers = totalOvers - currentOver;
     if (currentOverAndBallForFirstInnings > 0) {
       const projected = Math.round(
-        totalRunsFirstInnings + firstInningCRR * remainingOvers,
+        totalRunsFirstInnings + (firstInningCRR * remainingOvers)
       );
       setProjectedScore(projected);
     }
@@ -141,11 +133,11 @@ const Scoreboard = ({route}) => {
   useEffect(() => {
     const remainingOversSec = totalOvers - currentOver2ndInnings;
     if (remainingOversSec > 0) {
-      const rrr =
-        totalRunsFirstInnings - totalRunsSecondInnings / remainingOversSec;
+      const rrr = (totalRunsFirstInnings - (totalRunsSecondInnings / remainingOversSec));
       setRequiredRunRate(rrr.toFixed(2));
     }
   }, [totalRunsFirstInnings, totalRunsSecondInnings, currentOver2ndInnings]);
+
 
   const handleOverComplete = async () => {
     try {
@@ -259,57 +251,143 @@ const Scoreboard = ({route}) => {
     }
   };
 
-  const sendBatsmenDataToBackend = async (overNumber) => {
+  useEffect(() => {
+    if (selectedBatsman1 && selectedBatsman2) {
+      const batsmenData = [
+        {
+          batsman_name: selectedBatsman1.name,
+          runs_scored: Array.isArray(selectedBatsman1.ballRuns)
+            ? selectedBatsman1.ballRuns.reduce(
+              (sum, ballRun) => sum + ballRun,
+              0,
+            )
+            : 0,
+          balls_faced: selectedBatsman1.balls,
+          strike_rate:
+            ((Array.isArray(selectedBatsman1.ballRuns)
+              ? selectedBatsman1.ballRuns.reduce(
+                (sum, ballRun) => sum + ballRun,
+                0,
+              )
+              : 0) /
+              selectedBatsman1.ballRuns.length) *
+            100,
+          fours: selectedBatsman1.fours,
+          sixes: selectedBatsman1.sixes,
+          ones: selectedBatsman1.ones,
+          twos: selectedBatsman1.twos,
+          threes: selectedBatsman1.threes,
+          dots: selectedBatsman1.dots,
+          ball_runs: selectedBatsman1.ballRuns,
+          over_number: overNumber,
+          dismissed: dismissedBatsmen1Ref.current,
+        },
+        {
+          batsman_name: selectedBatsman2.name,
+          runs_scored: Array.isArray(selectedBatsman2.ballRuns)
+            ? selectedBatsman2.ballRuns.reduce(
+              (sum, ballRun) => sum + ballRun,
+              0,
+            )
+            : 0,
+          balls_faced: selectedBatsman2.balls,
+          strike_rate:
+            ((Array.isArray(selectedBatsman2.ballRuns)
+              ? selectedBatsman2.ballRuns.reduce(
+                (sum, ballRun) => sum + ballRun,
+                0,
+              )
+              : 0) /
+              selectedBatsman2.ballRuns.length) *
+            100,
+          fours: selectedBatsman2.fours,
+          sixes: selectedBatsman2.sixes,
+          ones: selectedBatsman2.ones,
+          twos: selectedBatsman2.twos,
+          threes: selectedBatsman2.threes,
+          dots: selectedBatsman2.dots,
+          ball_runs: selectedBatsman2.ballRuns,
+          over_number: overNumber,
+          dismissed: dismissedBatsmen1Ref.current,
+        },
+      ];
+      console.log('Updated Batsmen Data:', batsmenData);
+    }
+  }, [selectedBatsman1, selectedBatsman2]); // Trigger whenever selectedBatsman1 changes
+
+  const sendBatsmenDataToBackend = async overNumber => {
     const batsmenData = [
       {
         batsman_name: selectedBatsman1.name,
-        runs_scored: selectedBatsman1.ballRuns.reduce((sum, ballRun) => sum + ballRun, 0),
+        runs_scored: Array.isArray(selectedBatsman1.ballRuns)
+          ? selectedBatsman1.ballRuns.reduce((sum, ballRun) => sum + ballRun, 0)
+          : 0,
         balls_faced: selectedBatsman1.ballRuns.length,
-        strike_rate: (selectedBatsman1.ballRuns.reduce((sum, ballRun) => sum + ballRun, 0) / selectedBatsman1.ballRuns.length) * 100,
+        strike_rate:
+          ((Array.isArray(selectedBatsman1.ballRuns)
+            ? selectedBatsman1.ballRuns.reduce(
+              (sum, ballRun) => sum + ballRun,
+              0,
+            )
+            : 0) /
+            selectedBatsman1.ballRuns.length) *
+          100,
         fours: selectedBatsman1.fours,
         sixes: selectedBatsman1.sixes,
         ones: selectedBatsman1.ones,
         twos: selectedBatsman1.twos,
         threes: selectedBatsman1.threes,
         dots: selectedBatsman1.dots,
-        ball_runs: selectedBatsman1.ballRuns,  // No need to stringify this
-        run_positions: selectedBatsman1.runPositions,  // No need to stringify this
+        ball_runs: selectedBatsman1.ballRuns, // Add ball-by-ball data
         over_number: overNumber,
         dismissed: dismissedBatsmen1Ref.current,
       },
       {
         batsman_name: selectedBatsman2.name,
-        runs_scored: selectedBatsman2.ballRuns.reduce((sum, ballRun) => sum + ballRun, 0),
+        runs_scored: Array.isArray(selectedBatsman2.ballRuns)
+          ? selectedBatsman2.ballRuns.reduce((sum, ballRun) => sum + ballRun, 0)
+          : 0,
         balls_faced: selectedBatsman2.ballRuns.length,
-        strike_rate: (selectedBatsman2.ballRuns.reduce((sum, ballRun) => sum + ballRun, 0) / selectedBatsman2.ballRuns.length) * 100,
+        strike_rate:
+          ((Array.isArray(selectedBatsman2.ballRuns)
+            ? selectedBatsman2.ballRuns.reduce(
+              (sum, ballRun) => sum + ballRun,
+              0,
+            )
+            : 0) /
+            selectedBatsman2.ballRuns.length) *
+          100,
         fours: selectedBatsman2.fours,
         sixes: selectedBatsman2.sixes,
         ones: selectedBatsman2.ones,
         twos: selectedBatsman2.twos,
         threes: selectedBatsman2.threes,
         dots: selectedBatsman2.dots,
-        ball_runs: selectedBatsman2.ballRuns,  // No need to stringify this
-        run_positions: selectedBatsman2.runPositions,  // No need to stringify this
+        ball_runs: selectedBatsman2.ballRuns, // Add ball-by-ball data
         over_number: overNumber,
         dismissed: dismissedBatsmen2Ref.current,
-      }
+      },
     ];
-  
+
     try {
-      const response = await fetch(`${apiConnection.apiIp}/batsmenBallData.php`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${apiConnection.apiIp}/batsmenBallData.php`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            match_id: matchId,
+            team_id: battingTeamId,
+            batsmen: batsmenData,
+            innings: innings,
+          }),
         },
-        body: JSON.stringify({
-          match_id: matchId,
-          team_id: battingTeamId,
-          batsmen: batsmenData,
-          innings: innings,
-        }),
-      });
+      );
       const resultText = await response.text();
       console.log('BATSMEN DATA:: ', batsmenData);
+      // console.log("Raw response:", resultText);
       const result = JSON.parse(resultText);
       if (result.status === 'success') {
         console.log('Batsmen data saved successfully');
@@ -320,7 +398,6 @@ const Scoreboard = ({route}) => {
       console.error('Network error while saving batsmen data:', error);
     }
   };
-  
 
   const updateScore = (runs, isWicket = false, isExtra = false) => {
     if (innings == 1) {
@@ -332,7 +409,7 @@ const Scoreboard = ({route}) => {
         if (selectedBatsman.name === selectedBatsman1.name) {
           // Handle dismissal for batsman 1
           setSelectedBatsman1(prevBatsman => {
-            const updatedBatsman = {...prevBatsman};
+            const updatedBatsman = { ...prevBatsman };
             updatedBatsman.balls += 1; // Add a ball
             updatedBatsman.ballRuns.push(0); // Add 0 for wicket
             updatedBatsman.runs += runs; // Add the runs (even if it's 0 for wicket)
@@ -349,7 +426,7 @@ const Scoreboard = ({route}) => {
           console.log('mayeeeeeeeeen');
           // Handle dismissal for batsman 2
           setSelectedBatsman2(prevBatsman => {
-            const updatedBatsman = {...prevBatsman};
+            const updatedBatsman = { ...prevBatsman };
             updatedBatsman.balls += 1; // Add a ball
             updatedBatsman.ballRuns.push(0); // Add 0 for wicket
             updatedBatsman.runs += runs; // Add the runs (even if it's 0 for wicket)
@@ -378,7 +455,7 @@ const Scoreboard = ({route}) => {
           if (selectedBatsman.name === selectedBatsman1.name) {
             console.log('mayeeeeeeeeen222222222');
             setSelectedBatsman1(prevBatsman => {
-              const updatedBatsman = {...prevBatsman};
+              const updatedBatsman = { ...prevBatsman };
               updatedBatsman.runs += runs;
               updatedBatsman.balls += 1;
               if (runs === 6) updatedBatsman.sixes += 1;
@@ -404,7 +481,7 @@ const Scoreboard = ({route}) => {
             }
           } else if (selectedBatsman.name === selectedBatsman2.name) {
             setSelectedBatsman2(prevBatsman => {
-              const updatedBatsman = {...prevBatsman};
+              const updatedBatsman = { ...prevBatsman };
               updatedBatsman.runs += runs;
               updatedBatsman.balls += 1;
               updatedBatsman.ballRuns.push(runs); // Add the current ball's runs
@@ -456,7 +533,7 @@ const Scoreboard = ({route}) => {
                 hasReset: true,
               };
             }
-            const updatedBatsman = {...prevBatsman2ndInnings};
+            const updatedBatsman = { ...prevBatsman2ndInnings };
             updatedBatsman.balls += 1; // Add a ball
             updatedBatsman.ballRuns.push(0); // Add 0 for wicket
             updatedBatsman.runs += runs; // Add the runs (even if it's 0 for wicket)
@@ -472,7 +549,7 @@ const Scoreboard = ({route}) => {
           console.log('mayeeeeeeeeen');
           // Handle dismissal for batsman 2
           setSelectedBatsman2(prevBatsman2ndInnings => {
-            const updatedBatsman = {...prevBatsman2ndInnings};
+            const updatedBatsman = { ...prevBatsman2ndInnings };
             updatedBatsman.balls += 1; // Add a ball
             updatedBatsman.ballRuns.push(0); // Add 0 for wicket
             updatedBatsman.runs += runs; // Add the runs (even if it's 0 for wicket)
@@ -500,7 +577,7 @@ const Scoreboard = ({route}) => {
           if (selectedBatsman.name === selectedBatsman1.name) {
             console.log('mayeeeeeeeeen222222222');
             setSelectedBatsman1(prevBatsman2ndInnings => {
-              const updatedBatsman = {...prevBatsman2ndInnings};
+              const updatedBatsman = { ...prevBatsman2ndInnings };
               updatedBatsman.runs += runs;
               updatedBatsman.balls += 1;
               updatedBatsman.ballRuns.push(runs); // Add the current ball's runs
@@ -523,7 +600,7 @@ const Scoreboard = ({route}) => {
             }
           } else if (selectedBatsman.name === selectedBatsman2.name) {
             setSelectedBatsman2(prevBatsman2ndInnings => {
-              const updatedBatsman = {...prevBatsman2ndInnings};
+              const updatedBatsman = { ...prevBatsman2ndInnings };
               updatedBatsman.runs += runs;
               updatedBatsman.balls += 1;
               updatedBatsman.ballRuns.push(runs); // Add the current ball's runs
@@ -1251,7 +1328,7 @@ const Scoreboard = ({route}) => {
                     Alert.alert(
                       'Error',
                       data.message ||
-                        'An error occurred while saving the result.',
+                      'An error occurred while saving the result.',
                     );
                   }
                 } catch (error) {
@@ -1276,9 +1353,8 @@ const Scoreboard = ({route}) => {
                 legalBallsInOver = 0; // Reset after over completion
                 // newOvers += 1;
                 setCurrentOver2ndInnings(newOvers);
-                let resultMessage = `${battingTeamName} Wins by ${
-                  10 - totalWicketsInSecondInnings
-                } wicket!`;
+                let resultMessage = `${battingTeamName} Wins by ${10 - totalWicketsInSecondInnings
+                  } wicket!`;
                 sendResultToAPI(resultMessage);
                 Alert.alert('Congratulations', resultMessage);
                 navigation.navigate('Dashboard');
@@ -1302,9 +1378,8 @@ const Scoreboard = ({route}) => {
                 legalBallsInOver = 0; // Reset after over completion
                 // newOvers += 1;
                 setCurrentOver2ndInnings(newOvers);
-                let resultMessage = `${bowlingTeamName} Wins by ${
-                  totalRunsSecondInnings - totalRunsFirstInnings
-                } runs!`;
+                let resultMessage = `${bowlingTeamName} Wins by ${totalRunsSecondInnings - totalRunsFirstInnings
+                  } runs!`;
                 sendResultToAPI(resultMessage);
                 Alert.alert('Congratulations', bowlingTeamName + ' Wins!');
               } else if (
@@ -1527,7 +1602,7 @@ const Scoreboard = ({route}) => {
             label: `${num}nb`,
             value: num,
           }))}
-          placeholder={{label: 'Select No-Ball Runs', value: null}}
+          placeholder={{ label: 'Select No-Ball Runs', value: null }}
         />
       </View>
     </Modal>
@@ -1543,11 +1618,11 @@ const Scoreboard = ({route}) => {
             handleNoBallRunUpdate(value, (isExtraType = 'NoBall'));
           }}
           items={[
-            {label: 'Byes', value: 'Byes'},
-            {label: 'Legbyes', value: 'Legbyes'},
-            {label: 'None', value: 'None'},
+            { label: 'Byes', value: 'Byes' },
+            { label: 'Legbyes', value: 'Legbyes' },
+            { label: 'None', value: 'None' },
           ]}
-          placeholder={{label: 'Select Extra Type', value: null}}
+          placeholder={{ label: 'Select Extra Type', value: null }}
         />
       </View>
     </Modal>
@@ -1576,7 +1651,6 @@ const Scoreboard = ({route}) => {
           : selectedBatsman1,
       );
     }
-
     // Update batsman or extras
     if (extraType === 'None') {
       // Add runs to batsman's score
@@ -1595,12 +1669,8 @@ const Scoreboard = ({route}) => {
       if (selectedBatsman) {
         if (selectedBatsman.name === selectedBatsman1.name) {
           setSelectedBatsman1(prevBatsman => {
-            const updatedBatsman = {...prevBatsman};
+            const updatedBatsman = { ...prevBatsman };
             updatedBatsman.runs += runs;
-            updatedBatsman.balls += 1;
-            updatedBatsman.ballRuns.push(runs);
-            updatedBatsman.strikeRate =
-              (updatedBatsman.runs / updatedBatsman.balls) * 100;
             if (runs === 6) {
               updatedBatsman.sixes += 1;
             }
@@ -1611,12 +1681,8 @@ const Scoreboard = ({route}) => {
           });
         } else if (selectedBatsman.name === selectedBatsman2.name) {
           setSelectedBatsman2(prevBatsman => {
-            const updatedBatsman = {...prevBatsman};
+            const updatedBatsman = { ...prevBatsman };
             updatedBatsman.runs += runs;
-            updatedBatsman.balls += 1;
-            updatedBatsman.ballRuns.push(runs);
-            updatedBatsman.strikeRate =
-              (updatedBatsman.runs / updatedBatsman.balls) * 100;
             if (runs === 6) {
               updatedBatsman.sixes += 1;
             }
@@ -1640,29 +1706,7 @@ const Scoreboard = ({route}) => {
       if (innings == 2) {
         updateBowlerStatsForSeconInnings(1, false, true, isExtraType, runs + 1);
       }
-
       // console.log(`${runs} ${isExtraType} recorded.`);
-      if (selectedBatsman) {
-        if (selectedBatsman.name === selectedBatsman1.name) {
-          setSelectedBatsman1(prevBatsman => {
-            const updatedBatsman = {...prevBatsman};
-            updatedBatsman.balls += 1;
-            updatedBatsman.ballRuns.push(0);
-            updatedBatsman.strikeRate =
-              (updatedBatsman.runs / updatedBatsman.balls) * 100;
-            return updatedBatsman;
-          });
-        } else if (selectedBatsman.name === selectedBatsman2.name) {
-          setSelectedBatsman2(prevBatsman => {
-            const updatedBatsman = {...prevBatsman};
-            updatedBatsman.balls += 1;
-            updatedBatsman.ballRuns.push(0);
-            updatedBatsman.strikeRate =
-              (updatedBatsman.runs / updatedBatsman.balls) * 100;
-            return updatedBatsman;
-          });
-        }
-      }
     }
   };
 
@@ -1683,7 +1727,7 @@ const Scoreboard = ({route}) => {
             label: `${num}wd`,
             value: num,
           }))}
-          placeholder={{label: 'Select Wide Runs', value: null}}
+          placeholder={{ label: 'Select Wide Runs', value: null }}
         />
       </View>
     </Modal>
@@ -1748,7 +1792,7 @@ const Scoreboard = ({route}) => {
             label: `${num} byes/leg-byes`,
             value: num,
           }))}
-          placeholder={{label: 'Select Byes/Leg-Byes Runs', value: null}}
+          placeholder={{ label: 'Select Byes/Leg-Byes Runs', value: null }}
         />
       </View>
     </Modal>
@@ -1783,56 +1827,55 @@ const Scoreboard = ({route}) => {
     console.log(`${runs} recorded as extras ${isExtraType}`);
   };
 
+
+
+
   const fieldingPositions = {
-    '3rd Man': {x1: 150, y1: 150, x2: 120, y2: 50}, // Top-Left (Fine Edge)
-    'Fine Leg': {x1: 150, y1: 150, x2: 180, y2: 50}, // Top-Right (Fine Edge)
-    'Long On': {x1: 150, y1: 150, x2: 170, y2: 270}, // Bottom-Center
-    'Long Off': {x1: 150, y1: 150, x2: 130, y2: 270}, // Top-Center
-    'Mid On': {x1: 150, y1: 150, x2: 160, y2: 220}, // Near Bottom
-    'Mid Off': {x1: 150, y1: 150, x2: 140, y2: 80}, // Near Top
-    Cover: {x1: 150, y1: 150, x2: 110, y2: 130}, // Left Side (Extra Cover Area)
-    'Extra Cover': {x1: 150, y1: 150, x2: 90, y2: 140}, // More Left
-    Point: {x1: 150, y1: 150, x2: 60, y2: 160}, // Extreme Left (Backward Point)
-    'Square Leg': {x1: 150, y1: 150, x2: 240, y2: 160}, // Right Side
-    'Mid Wicket': {x1: 150, y1: 150, x2: 180, y2: 190}, // Near Right
-    'Deep Mid Wicket': {x1: 150, y1: 150, x2: 230, y2: 220}, // Outer Right
-    'Deep Square': {x1: 150, y1: 150, x2: 240, y2: 130}, // Deep Right
-    'Deep Extra Cover': {x1: 150, y1: 150, x2: 60, y2: 120}, // Deep Left
+    "3rd Man": { x1: 150, y1: 150, x2: 120, y2: 50 },  // Top-Left (Fine Edge)
+    "Fine Leg": { x1: 150, y1: 150, x2: 180, y2: 50 },  // Top-Right (Fine Edge)
+    "Long On": { x1: 150, y1: 150, x2: 170, y2: 270 },  // Bottom-Center
+    "Long Off": { x1: 150, y1: 150, x2: 130, y2: 270 },  // Top-Center
+    "Mid On": { x1: 150, y1: 150, x2: 160, y2: 220 },  // Near Bottom
+    "Mid Off": { x1: 150, y1: 150, x2: 140, y2: 80 },  // Near Top
+    "Cover": { x1: 150, y1: 150, x2: 110, y2: 130 },  // Left Side (Extra Cover Area)
+    "Extra Cover": { x1: 150, y1: 150, x2: 90, y2: 140 },  // More Left
+    "Point": { x1: 150, y1: 150, x2: 60, y2: 160 },  // Extreme Left (Backward Point)
+    "Square Leg": { x1: 150, y1: 150, x2: 240, y2: 160 },  // Right Side
+    "Mid Wicket": { x1: 150, y1: 150, x2: 180, y2: 190 },  // Near Right
+    "Deep Mid Wicket": { x1: 150, y1: 150, x2: 230, y2: 220 },  // Outer Right
+    "Deep Square": { x1: 150, y1: 150, x2: 240, y2: 130 },  // Deep Right
+    "Deep Extra Cover": { x1: 150, y1: 150, x2: 60, y2: 120 },  // Deep Left
   };
 
   const getCurrentBatsman = () => {
-    return selectedBatsman?.id === selectedBatsman1?.id
-      ? 'batsman1'
-      : 'batsman2';
+    return selectedBatsman?.id === selectedBatsman1?.id ? "batsman1" : "batsman2";
   };
 
   // Runs ke Mutabiq Line Color
-  const getStrokeColor = runs => {
+  const getStrokeColor = (runs) => {
     switch (runs) {
-      case 1:
-        return 'blue';
-      case 2:
-        return 'green';
-      case 3:
-        return 'yellow';
-      case 4:
-        return 'orange';
-      case 5:
-        return 'purple';
-      case 6:
-        return 'red';
-      default:
-        return 'gray';
+      case 1: return "blue";
+      case 2: return "green";
+      case 3: return "yellow";
+      case 4: return "orange";
+      case 5: return "purple";
+      case 6: return "red";
+      default: return "gray";
     }
   };
+  // // Button Click -> Line Draw   (yh wala sahi tha)
+  // const handleDrawShot = (runs, position) => {
+  //   if (fieldingPositions[position]) {
+  //     const newLine = { ...fieldingPositions[position], color: getStrokeColor(runs) };
+  //     setLines([...lines, newLine]); // Save Line
+  //   }
+  // };
+
 
   // Button Click -> Shot Draw aur Batsman ka data save
   const handleDrawShot = (runs, position) => {
     if (fieldingPositions[position]) {
-      const newLine = {
-        ...fieldingPositions[position],
-        color: getStrokeColor(runs),
-      };
+      const newLine = { ...fieldingPositions[position], color: getStrokeColor(runs) };
 
       if (selectedBatsman === selectedBatsman1) {
         setBatsman1Shots([...batsman1Shots, newLine]);
@@ -1845,46 +1888,37 @@ const Scoreboard = ({route}) => {
   const renderStadiumModal = () => (
     <Modal visible={isStadiumModalVisible} transparent animationType="slide">
       <View style={wstyles.modalContainer}>
-        <Text style={[wstyles.modalHeader]}>Select Fielding Position</Text>
+
+
+        <Text style={[wstyles.modalHeader]}>
+          Select Fielding Position
+        </Text>
 
         <Text style={wstyles.modalHeader}>
-          {getCurrentBatsman() === 'batsman2'
-            ? selectedBatsman1.name
-            : selectedBatsman2.name}
-          's Wagon Wheel
+          {getCurrentBatsman() === "batsman2" ? selectedBatsman1.name : selectedBatsman2.name}'s Wagon Wheel
         </Text>
-        <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
+        <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
           {/* SVG Wagon Wheel */}
           <Svg height="300" width="300" viewBox="0 0 300 300">
             {/* Stadium Outer Boundary */}
-            <Circle
-              cx="150"
-              cy="150"
-              r="140"
-              stroke="black"
-              strokeWidth="2"
-              fill="lightgreen"
-            />
+            <Circle cx="150" cy="150" r="140" stroke="black" strokeWidth="2" fill="lightgreen" />
 
             {/* Pitch Rectangle */}
             <Rect x="135" y="120" width="30" height="60" fill="brown" />
 
+
             {/* Draw Shots Only for Active Batsman */}
-            {(getCurrentBatsman() === 'batsman1'
-              ? batsman1Shots
-              : batsman2Shots
-            ).map((shot, index) => (
-              <Line
-                key={index}
+            {(getCurrentBatsman() === "batsman1" ? batsman1Shots : batsman2Shots).map((shot, index) => (
+              <Line key={index}
                 x1={shot.x1}
                 y1={shot.y1}
                 x2={shot.x2}
                 y2={shot.y2}
                 stroke={shot.color}
-                strokeWidth="3"
-              />
+                strokeWidth="3" />
             ))}
           </Svg>
+
         </View>
         <View style={wstyles.fieldingPositionsContainer}>
           {[
@@ -1902,11 +1936,14 @@ const Scoreboard = ({route}) => {
             'Deep Mid Wicket',
             'Deep Square',
             'Deep Extra Cover',
-          ].map(position => (
+          ].map((position) => (
             <TouchableOpacity
               key={position}
               style={wstyles.positionButton}
-              onPress={() => handlePositionSelection(position)}>
+              onPress={() => handlePositionSelection(position)
+
+              }
+            >
               <Text style={wstyles.positionButtonText}>{position}</Text>
             </TouchableOpacity>
           ))}
@@ -1915,33 +1952,36 @@ const Scoreboard = ({route}) => {
           title="Cancel"
           onPress={() => setIsStadiumModalVisible(false)}
         />
+
       </View>
     </Modal>
   );
 
-  const handleRunSelection = runs => {
+  // const handleFieldPositionSelect = (position) => {
+  //   setSelectedPosition(position); // Save position
+  //   if (selectedRuns !== null) { // Ensure runs are selected
+  //     handleDrawShot(selectedRuns, position); // Draw line
+  //     setSelectedRuns(null); // Reset after drawing
+  //   }
+  //   setIsStadiumModalVisible(false); // Close modal
+  // };
+
+  // const handleStadiumModalPress = () => {
+  //   setIsStadiumModalVisible(true);
+  // };
+
+
+
+  const handleRunSelection = (runs) => {
     setSelectedRuns(runs);
     setIsStadiumModalVisible(true); // Modal open ho
   };
 
-  const handlePositionSelection = position => {
+  const handlePositionSelection = (position) => {
     if (selectedRuns !== null) {
-      if (selectedBatsman.name === selectedBatsman1.name) {
-        setSelectedBatsman1(prevBatsman => {
-          const updatedBatsman = {...prevBatsman};
-          updatedBatsman.runPositions.push(position);
-          return updatedBatsman;
-        });
-      } else if (selectedBatsman.name === selectedBatsman2.name) {
-        setSelectedBatsman2(prevBatsman => {
-          const updatedBatsman = {...prevBatsman};
-          updatedBatsman.runPositions.push(position);
-          return updatedBatsman;
-        });
-      }
-
       handleDrawShot(selectedRuns, position); // Runs + Position pass karo
       setSelectedRuns(null); // Reset runs
+      //setIsStadiumModalVisible(false); // Modal band karo
     }
   };
 
@@ -1952,7 +1992,7 @@ const Scoreboard = ({route}) => {
 
   // Function to fetch data from PHP script and display players
   async function fetchMatchData(matchId) {
-    const requestData = {match_id: matchId};
+    const requestData = { match_id: matchId };
 
     try {
       const response = await fetch(
@@ -1997,7 +2037,6 @@ const Scoreboard = ({route}) => {
               dismissed: 0,
               wicket_type: 'Not Out',
               ballRuns: [],
-              runPositions: [],
             }));
 
           const validBowlers = (data.bowling_team || [])
@@ -2044,7 +2083,6 @@ const Scoreboard = ({route}) => {
               dismissed: 0,
               wicket_type: 'Not Out',
               ballRuns: [],
-              runPositions: [],
             }));
 
           const validBowlers = (data.batting_team || [])
@@ -2078,15 +2116,21 @@ const Scoreboard = ({route}) => {
     if (matchId) {
       fetchMatchData(matchId);
     }
-  }, [matchId, innings]);
-
+  }, [matchId]);
   useEffect(() => {
     if (innings === 2) {
       setModalVisible(true); // Open modal for the second innings
-
+  
       // Reset both batsmen's shots
       setBatsman1Shots([]);
       setBatsman2Shots([]);
+    }
+  }, [innings]);
+  
+
+  useEffect(() => {
+    if (matchId) {
+      fetchMatchData(matchId);
     }
   }, [innings]);
 
@@ -2113,17 +2157,23 @@ const Scoreboard = ({route}) => {
 
       // Reset data for the out batsman
       if (selectedBatsman?.id === selectedBatsman1?.id) {
-        setBatsman2Shots([]);
+        setBatsman2Shots([]); // Clear Batsman 1's shots
       } else {
-        setBatsman1Shots([]);
+        setBatsman1Shots([]); // Clear Batsman 2's shots
       }
     } else {
       alert('Please select a batsman first');
     }
   };
+  useEffect(() => {
+    console.log(wicketType);
+  }, [wicketType]);
 
   const handleWicketSelection = type => {
     setWicketType(type + 'by' + selectedBowler.name);
+    // setWicketType(type + '.' + selectedBowler.name);
+    // console.log(wicketType)
+    // console.log(`${runs} recorded as extras ${isExtraType}`);
     setIsConfirmModalVisible(true); // Show the confirmation modal
   };
 
@@ -2230,8 +2280,6 @@ const Scoreboard = ({route}) => {
             .toFixed(2),
           innings: innings, // Assuming you have a variable for innings (1st or 2nd)
           total_runs_sum: runsInOver.reduce((acc, run) => acc + run, 0),
-          total_no_balls: selectedBowler?.noball,
-          total_wide_balls: selectedBowler?.wides,
         };
 
         try {
@@ -2311,8 +2359,6 @@ const Scoreboard = ({route}) => {
             .toFixed(2),
           innings: innings, // Assuming you have a variable for innings (1st or 2nd)
           total_runs_sum: runsInOver.reduce((acc, run) => acc + run, 0),
-          total_no_balls: selectedBowler?.noball,
-          total_wide_balls: selectedBowler?.wides,
         };
 
         try {
@@ -2381,8 +2427,6 @@ const Scoreboard = ({route}) => {
             .toFixed(2),
           innings: innings, // Assuming you have a variable for innings (1st or 2nd)
           total_runs_sum: runsInOver.reduce((acc, run) => acc + run, 0),
-          total_no_balls: selectedBowler?.noball,
-          total_wide_balls: selectedBowler?.wides,
         };
 
         try {
@@ -2446,8 +2490,6 @@ const Scoreboard = ({route}) => {
             .toFixed(2),
           innings: innings, // Assuming you have a variable for innings (1st or 2nd)
           total_runs_sum: runsInOver.reduce((acc, run) => acc + run, 0),
-          total_no_balls: selectedBowler?.noball,
-          total_wide_balls: selectedBowler?.wides,
         };
 
         try {
@@ -2506,7 +2548,7 @@ const Scoreboard = ({route}) => {
 
   return (
     <ScrollView
-      style={[ScoreboardStyle.container, {backgroundColor: colors.background}]}>
+      style={[ScoreboardStyle.container, { backgroundColor: colors.background }]}>
       <Modal
         visible={isOverComplete}
         animationType="slide"
@@ -2527,7 +2569,7 @@ const Scoreboard = ({route}) => {
                   label: bowler.name,
                   value: bowler.name,
                 }))}
-              placeholder={{label: 'Select Bowler', value: null}}
+              placeholder={{ label: 'Select Bowler', value: null }}
               value={selectedBowler ? selectedBowler.name : null}
               style={{
                 inputIOS: {
@@ -2573,7 +2615,7 @@ const Scoreboard = ({route}) => {
                 value: player.name,
               }))}
               value={selectedBatsman1 ? selectedBatsman1.name : null}
-              placeholder={{label: 'Select Batsman 1', value: null}}
+              placeholder={{ label: 'Select Batsman 1', value: null }}
               style={{
                 inputIOS: {
                   ...ScoreboardStyle.picker,
@@ -2599,7 +2641,7 @@ const Scoreboard = ({route}) => {
                 value: player.name,
               }))}
               value={selectedBatsman2 ? selectedBatsman2.name : null}
-              placeholder={{label: 'Select Batsman 2', value: null}}
+              placeholder={{ label: 'Select Batsman 2', value: null }}
               style={{
                 inputIOS: {
                   ...ScoreboardStyle.picker,
@@ -2628,7 +2670,7 @@ const Scoreboard = ({route}) => {
                 value: bowler.name,
               }))}
               value={selectedBowler ? selectedBowler.name : null}
-              placeholder={{label: 'Select Bowler', value: null}}
+              placeholder={{ label: 'Select Bowler', value: null }}
               style={{
                 inputIOS: {
                   ...ScoreboardStyle.picker,
@@ -2662,7 +2704,7 @@ const Scoreboard = ({route}) => {
                 <AntDesign name="caretleft" size={25} color="#EB001B" />
               </TouchableOpacity>
             </View>
-            <Text style={[ScoreboardStyle.title, {color: colors.text}]}>
+            <Text style={[ScoreboardStyle.title, { color: colors.text }]}>
               Matches
             </Text>
             <Icon
@@ -2675,7 +2717,7 @@ const Scoreboard = ({route}) => {
 
           {/* Score Card Section */}
           <View style={ScoreboardStyle.middleText}>
-            <Text style={[ScoreboardStyle.welTxt, {color: colors.text}]}>
+            <Text style={[ScoreboardStyle.welTxt, { color: colors.text }]}>
               Score Card
             </Text>
           </View>
@@ -2687,7 +2729,7 @@ const Scoreboard = ({route}) => {
               <View
                 style={[
                   ScoreboardStyle.helmetIconContainer,
-                  {backgroundColor: 'orange'},
+                  { backgroundColor: 'orange' },
                 ]}>
                 <Image
                   source={require('../assets/icons/helmet.png')}
@@ -2695,10 +2737,10 @@ const Scoreboard = ({route}) => {
                   resizeMode="contain"
                 />
               </View>
-              <Text style={[ScoreboardStyle.teamText, {color: 'black'}]}>
+              <Text style={[ScoreboardStyle.teamText, { color: 'black' }]}>
                 {battingTeamName}
               </Text>
-              <Text style={[ScoreboardStyle.scoreText, {marginRight: 75}]}>
+              <Text style={[ScoreboardStyle.scoreText, { marginRight: 75 }]}>
                 {totalRunsFirstInnings}/{totalWicketsInFirstInnings}
               </Text>
               <Text style={ScoreboardStyle.scoreText}>
@@ -2715,10 +2757,10 @@ const Scoreboard = ({route}) => {
                   resizeMode="contain"
                 />
               </View>
-              <Text style={[ScoreboardStyle.teamText, {color: 'black'}]}>
+              <Text style={[ScoreboardStyle.teamText, { color: 'black' }]}>
                 {bowlingTeamName}
               </Text>
-              <Text style={[ScoreboardStyle.scoreText, {marginRight: 75}]}>
+              <Text style={[ScoreboardStyle.scoreText, { marginRight: 75 }]}>
                 {totalRunsSecondInnings}/{totalWicketsInSecondInnings}
               </Text>
               {innings == 2 && (
@@ -2737,36 +2779,30 @@ const Scoreboard = ({route}) => {
                 {/* First Inning CRR (Visible Only in First Inning) */}
                 {innings === 1 && (
                   <View style={ScoreboardStyle.crrContainer}>
-                    <Text style={[ScoreboardStyle.crrText, {color: 'black'}]}>
+                    <Text style={[ScoreboardStyle.crrText, { color: "black" }]}>
                       First Inning CRR:
                     </Text>
-                    <Text style={ScoreboardStyle.crrNumber}>
-                      {firstInningCRR}
-                    </Text>
+                    <Text style={ScoreboardStyle.crrNumber}>{firstInningCRR}</Text>
                   </View>
                 )}
 
                 {/* Second Inning CRR (Visible Only in Second Inning) */}
                 {innings === 2 && (
                   <View style={ScoreboardStyle.crrContainer}>
-                    <Text style={[ScoreboardStyle.crrText, {color: 'black'}]}>
+                    <Text style={[ScoreboardStyle.crrText, { color: "black" }]}>
                       Second Inning CRR:
                     </Text>
-                    <Text style={ScoreboardStyle.crrNumber}>
-                      {secondInningCRR}
-                    </Text>
+                    <Text style={ScoreboardStyle.crrNumber}>{secondInningCRR}</Text>
                   </View>
                 )}
               </View>
 
               {innings === 1 && (
                 <View style={ScoreboardStyle.crrContainer}>
-                  <Text style={[ScoreboardStyle.crrText, {color: 'black'}]}>
+                  <Text style={[ScoreboardStyle.crrText, { color: "black" }]}>
                     Projected Score:
                   </Text>
-                  <Text style={ScoreboardStyle.crrNumber}>
-                    {projectedScore}
-                  </Text>
+                  <Text style={ScoreboardStyle.crrNumber}>{projectedScore}</Text>
                 </View>
               )}
 
@@ -2774,16 +2810,15 @@ const Scoreboard = ({route}) => {
                 {/* Second Inning RRR (Visible Only in Second Inning) */}
                 {innings === 2 && (
                   <View style={ScoreboardStyle.crrContainer}>
-                    <Text style={[ScoreboardStyle.crrText, {color: 'black'}]}>
+                    <Text style={[ScoreboardStyle.crrText, { color: "black" }]}>
                       Required Run Rate (RRR):
                     </Text>
-                    <Text style={ScoreboardStyle.crrNumber}>
-                      {requiredRunRate}
-                    </Text>
+                    <Text style={ScoreboardStyle.crrNumber}>{requiredRunRate}</Text>
                   </View>
                 )}
               </View>
             </View>
+
 
             {/* Line Divider */}
             <View style={ScoreboardStyle.line}></View>
@@ -2792,7 +2827,7 @@ const Scoreboard = ({route}) => {
               <Text
                 style={[
                   ScoreboardStyle.batTxtH,
-                  {color: colors.text, flex: 1, textAlign: 'left'},
+                  { color: colors.text, flex: 1, textAlign: 'left' },
                 ]}>
                 Batters
               </Text>
@@ -2814,7 +2849,7 @@ const Scoreboard = ({route}) => {
             {selectedBatsman1 && (
               <View style={ScoreboardStyle.batterText}>
                 <View
-                  style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
+                  style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
                   {/* Select Player 1 by clicking on the name */}
                   <TouchableOpacity
                     onPress={() => setSelectedBatsman(selectedBatsman1)}>
@@ -2884,7 +2919,7 @@ const Scoreboard = ({route}) => {
 
             {selectedBatsman2 && (
               <View style={ScoreboardStyle.batterText}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   {/* Select Player 2 by clicking on the name */}
                   <TouchableOpacity
                     onPress={() => setSelectedBatsman(selectedBatsman2)}>
@@ -2956,7 +2991,7 @@ const Scoreboard = ({route}) => {
               <Text
                 style={[
                   ScoreboardStyle.batTxtH,
-                  {color: colors.text, flex: 1, textAlign: 'left'},
+                  { color: colors.text, flex: 1, textAlign: 'left' },
                 ]}>
                 Bowlers
               </Text>
@@ -2981,7 +3016,7 @@ const Scoreboard = ({route}) => {
                   <Text
                     style={[
                       ScoreboardStyle.batTxt,
-                      {color: 'white', flex: 1, textAlign: 'left'},
+                      { color: 'white', flex: 1, textAlign: 'left' },
                     ]}>
                     {selectedBowler.name}
                   </Text>
@@ -2993,7 +3028,7 @@ const Scoreboard = ({route}) => {
                     flex: 3,
                   }}>
                   {innings == 1 && (
-                    <View style={{flexDirection: 'row'}}>
+                    <View style={{ flexDirection: 'row' }}>
                       <Text style={ScoreboardStyle.runs}>
                         {selectedBowler.overs}
                       </Text>
@@ -3012,7 +3047,7 @@ const Scoreboard = ({route}) => {
                     </View>
                   )}
                   {innings == 2 && (
-                    <View style={{flexDirection: 'row'}}>
+                    <View style={{ flexDirection: 'row' }}>
                       <Text style={ScoreboardStyle.runs}>
                         {selectedBowler.overs}
                       </Text>
@@ -3038,7 +3073,8 @@ const Scoreboard = ({route}) => {
                 <TouchableOpacity
                   style={ScoreboardStyle.oversCard}
                   onPress={() => {
-                    handleRunSelection(0);
+
+
                     //handleStadiumModalPress(0, false, false);
                     if (innings == 1) {
                       updateScore(0, false, false);
@@ -3055,7 +3091,7 @@ const Scoreboard = ({route}) => {
                 <TouchableOpacity
                   style={ScoreboardStyle.oversCard}
                   onPress={() => {
-                    handleRunSelection(1);
+                    handleRunSelection(1)
                     //handleStadiumModalPress(); // Open modal
                     if (innings == 1) {
                       updateScore(1, false, false);
@@ -3072,7 +3108,7 @@ const Scoreboard = ({route}) => {
                 <TouchableOpacity
                   style={ScoreboardStyle.oversCard}
                   onPress={() => {
-                    handleRunSelection(2);
+                    handleRunSelection(2)
                     // handleStadiumModalPress(); // Open modal
                     if (innings == 1) {
                       updateScore(2, false, false);
@@ -3089,7 +3125,7 @@ const Scoreboard = ({route}) => {
                 <TouchableOpacity
                   style={ScoreboardStyle.oversCard}
                   onPress={() => {
-                    handleRunSelection(3); // Save runs for modal
+                    handleRunSelection(3) // Save runs for modal
                     //handleStadiumModalPress(); // Open modal
                     if (innings == 1) {
                       updateScore(3, false, false);
@@ -3104,7 +3140,7 @@ const Scoreboard = ({route}) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  style={[ScoreboardStyle.oversCard, {backgroundColor: 'grey'}]}
+                  style={[ScoreboardStyle.oversCard, { backgroundColor: 'grey' }]}
                   onPress={() => navigation.navigate('EnterTeam')}>
                   <View style={[ScoreboardStyle.addIconContainer]}>
                     <MaterialCommunityIcons
@@ -3120,7 +3156,7 @@ const Scoreboard = ({route}) => {
                 <TouchableOpacity
                   style={ScoreboardStyle.oversCard}
                   onPress={() => {
-                    handleRunSelection(4);
+                    handleRunSelection(4)
                     // handleStadiumModalPress();
                     if (innings == 1) {
                       updateScore(4, false, false);
@@ -3137,7 +3173,7 @@ const Scoreboard = ({route}) => {
                 <TouchableOpacity
                   style={ScoreboardStyle.oversCard}
                   onPress={() => {
-                    handleRunSelection(5);
+                    handleRunSelection(5)
                     //handleStadiumModalPress();
                     if (innings == 1) {
                       updateScore(5, false, false);
@@ -3154,7 +3190,7 @@ const Scoreboard = ({route}) => {
                 <TouchableOpacity
                   style={ScoreboardStyle.oversCard}
                   onPress={() => {
-                    handleRunSelection(6);
+                    handleRunSelection(6)
                     //handleStadiumModalPress();
                     if (innings == 1) {
                       updateScore(6, false, false);
@@ -3178,7 +3214,7 @@ const Scoreboard = ({route}) => {
                     },
                   ]}
                   onPress={() => {
-                    handleRunSelection(7);
+                    handleRunSelection(7)
                     //handleStadiumModalPress();
                     if (innings == 1) {
                       updateScore(7, false, false);
@@ -3212,11 +3248,11 @@ const Scoreboard = ({route}) => {
                 <TouchableOpacity
                   style={[
                     ScoreboardStyle.oversCard,
-                    {backgroundColor: 'black'},
+                    { backgroundColor: 'black' },
                   ]}
                   onPress={handleWidePress}>
                   <View style={[ScoreboardStyle.addIconContainer]}>
-                    <Text style={[ScoreboardStyle.overText, {color: 'white'}]}>
+                    <Text style={[ScoreboardStyle.overText, { color: 'white' }]}>
                       WIDE
                     </Text>
                   </View>
@@ -3225,11 +3261,11 @@ const Scoreboard = ({route}) => {
                 <TouchableOpacity
                   style={[
                     ScoreboardStyle.oversCard,
-                    {backgroundColor: 'black'},
+                    { backgroundColor: 'black' },
                   ]}
                   onPress={handleNoBallPress}>
                   <View style={[ScoreboardStyle.addIconContainer]}>
-                    <Text style={[ScoreboardStyle.overText, {color: 'white'}]}>
+                    <Text style={[ScoreboardStyle.overText, { color: 'white' }]}>
                       NOBALL
                     </Text>
                   </View>
@@ -3238,11 +3274,11 @@ const Scoreboard = ({route}) => {
                 <TouchableOpacity
                   style={[
                     ScoreboardStyle.oversCard,
-                    {backgroundColor: 'black'},
+                    { backgroundColor: 'black' },
                   ]}
                   onPress={handleByesLegByesPress}>
                   <View style={[ScoreboardStyle.addIconContainer]}>
-                    <Text style={[ScoreboardStyle.overText, {color: 'white'}]}>
+                    <Text style={[ScoreboardStyle.overText, { color: 'white' }]}>
                       BYES
                     </Text>
                   </View>
@@ -3251,21 +3287,21 @@ const Scoreboard = ({route}) => {
                 <TouchableOpacity
                   style={[
                     ScoreboardStyle.oversCard,
-                    {backgroundColor: 'black'},
+                    { backgroundColor: 'black' },
                   ]}
                   onPress={handleByesLegByesPress}>
                   <View style={[ScoreboardStyle.addIconContainer]}>
-                    <Text style={[ScoreboardStyle.overText, {color: 'white'}]}>
+                    <Text style={[ScoreboardStyle.overText, { color: 'white' }]}>
                       LEGBYES
                     </Text>
                   </View>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  style={[ScoreboardStyle.oversCard, {backgroundColor: 'red'}]}
+                  style={[ScoreboardStyle.oversCard, { backgroundColor: 'red' }]}
                   onPress={handleWicketPress}>
                   <View style={[ScoreboardStyle.addIconContainer]}>
-                    <Text style={[ScoreboardStyle.overText, {color: 'white'}]}>
+                    <Text style={[ScoreboardStyle.overText, { color: 'white' }]}>
                       WICKET
                     </Text>
                   </View>
@@ -3348,7 +3384,7 @@ const Scoreboard = ({route}) => {
 
                     {/* Select New Batsman */}
                     <RNPickerSelect
-                      placeholder={{label: 'Select New Batsman', value: null}}
+                      placeholder={{ label: 'Select New Batsman', value: null }}
                       value={newBatsman ? newBatsman.name : null}
                       onValueChange={value => setNewBatsman(value)} // Set the new batsman
                       items={availableBatsmen()} // Get available batsmen for selection
@@ -3371,7 +3407,7 @@ const Scoreboard = ({route}) => {
             </View>
 
             <TouchableOpacity style={[ScoreboardStyle.button]}>
-              <Text style={[ScoreboardStyle.buttonText, {color: 'white'}]}>
+              <Text style={[ScoreboardStyle.buttonText, { color: 'white' }]}>
                 End Match
               </Text>
             </TouchableOpacity>
@@ -3399,10 +3435,10 @@ const wstyles = StyleSheet.create({
   },
   modalHeader: {
     fontSize: 18,
-    fontWeight: '500',
+    fontWeight: "500",
     fontFamily: 'SignikaNegative-Regular',
     textAlign: 'center', // Center-align the header text
-    color: 'white',
+    color: "white",
   },
 
   fieldingPositionsContainer: {
@@ -3425,5 +3461,6 @@ const wstyles = StyleSheet.create({
     fontSize: 14, // Reduced font size for better fit
   },
 });
+
 
 export default Scoreboard;

@@ -37,6 +37,8 @@ $query = "
         SUM(b.total_wickets) AS total_wickets,
         SUM(b.total_runs_concede) AS total_runs_concede,
         SUM(b.total_balls) AS total_balls,
+        SUM(b.total_no_balls) AS total_no_balls,
+        SUM(b.total_wide_balls) AS total_wide_balls,
         ROUND(SUM(b.total_runs_concede) / SUM(b.total_wickets), 2) AS bowling_average,
         ROUND((SUM(b.total_runs_concede) / SUM(b.total_balls)) * 6, 2) AS economy_rate,
         SUM(CASE WHEN b.total_runs_concede = 0 THEN 1 ELSE 0 END) AS maiden_overs,
@@ -50,6 +52,8 @@ $query = "
                 SUM(b.total_wickets) AS total_wickets,
                 SUM(b.total_balls_bowled) AS total_balls,
                 SUM(b.total_runs_sum) AS total_runs_concede,
+                SUM(b.total_no_balls) AS total_no_balls,
+                SUM(b.total_wide_balls) AS total_wide_balls,
                 COUNT(CASE WHEN b.total_runs_sum = 0 THEN 1 END) AS maiden_overs,
                 COUNT(CASE WHEN b.total_wickets >= 3 THEN 1 END) AS three_wicket_hauls,
                 COUNT(CASE WHEN b.total_wickets >= 5 THEN 1 END) AS five_wicket_hauls
