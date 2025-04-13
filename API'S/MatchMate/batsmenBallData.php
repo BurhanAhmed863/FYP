@@ -45,18 +45,20 @@ foreach ($batsmen as $batsman) {
     $threes = isset($batsman['threes']) ? (int) $batsman['threes'] : 0;
     $dots = isset($batsman['dots']) ? (int) $batsman['dots'] : 0;
     $overNumber = isset($batsman['over_number']) ? (int) $batsman['over_number'] : 0;
-    $ballRuns = isset($batsman['ball_runs']) ? json_encode($batsman['ball_runs']) : json_encode([]); // Encode ballRuns as JSON
+    $ballRuns = isset($batsman['ball_runs']) ? json_encode($batsman['ball_runs']) : json_encode([]);
+    $runPositions = isset($batsman['run_positions']) ? json_encode($batsman['run_positions']) : json_encode([]);
     $dismissed = isset($batsman['dismissed']) ? (int) $batsman['dismissed'] : 0;
 
     // Insert or update batsman's stats into the database
     $query = "
         INSERT INTO batsmanballbystats 
-        (m_id, t_id, batsman_name, ball_number, over_number, runs_scored, ball_runs, sixes, fours, dismissed, strike_rate, innings, user_id) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (m_id, t_id, batsman_name, ball_number, over_number, runs_scored, ball_runs, run_positions, sixes, fours, dismissed, strike_rate, innings, user_id) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON DUPLICATE KEY UPDATE 
             runs_scored = VALUES(runs_scored),
             ball_number = VALUES(ball_number),
             ball_runs = VALUES(ball_runs),
+            run_positions = VALUES(run_positions),
             sixes = VALUES(sixes),
             fours = VALUES(fours),
             dismissed = VALUES(dismissed),
@@ -66,24 +68,24 @@ foreach ($batsmen as $batsman) {
     if ($stmt = mysqli_prepare($conn, $query)) {
         mysqli_stmt_bind_param(
             $stmt,
-            "iisiiisiiidii", // 12 types: integer (i), string (s), double (d)
-            $matchId,        // i
-            $teamId,         // i
-            $batsmanName,    // s
-            $ballsFaced,     // i
-            $overNumber,     // i
-            $runsScored,     // i
-            $ballRuns,       // s (JSON string)
-            $sixes,          // i
-            $fours,          // i
-            $dismissed,     // i
-            $strikeRate,     // d
-            $inning,         // i
-            $userId          // i
+            "iisiiissiiidii", // 14 params
+            $matchId,         // i
+            $teamId,          // i
+            $batsmanName,     // s
+            $ballsFaced,      // i
+            $overNumber,      // i
+            $runsScored,      // i
+            $ballRuns,        // s (JSON string)
+            $runPositions,    // s (JSON string)
+            $sixes,           // i
+            $fours,           // i
+            $dismissed,       // i
+            $strikeRate,      // d
+            $inning,          // i
+            $userId           // i
         );
 
         if (!mysqli_stmt_execute($stmt)) {
-            // Log the error if execution fails
             error_log("SQL Error: " . mysqli_error($conn));
             echo json_encode(["status" => "error", "message" => "Database execution error"]);
             exit;
@@ -91,14 +93,12 @@ foreach ($batsmen as $batsman) {
 
         mysqli_stmt_close($stmt);
     } else {
-        // Log preparation error
         error_log("SQL Prepare Error: " . mysqli_error($conn));
         echo json_encode(["status" => "error", "message" => "Database query preparation failed"]);
         exit;
     }
 }
 
-// Respond with success
 echo json_encode(["status" => "success", "message" => "Batsmen data saved successfully"]);
 mysqli_close($conn);
 ?>

@@ -34,7 +34,7 @@ const PlayerStats = ({route, navigation}) => {
       const result = JSON.parse(text);
 
       if (result.status === 'success') {
-        const data = result.data[0];
+        const data = result.data;
         const batting = {
           name: data.player_name,
           team: selectedTeam.name,
@@ -52,6 +52,8 @@ const PlayerStats = ({route, navigation}) => {
             (parseInt(data.total_dismissals, 10) || 0), // Default to 0 if null or NaN
           fours: parseInt(data.total_fours, 10) || 0, // Default to 0 if null or NaN
           sixes: parseInt(data.total_sixes, 10) || 0, // Default to 0 if null or NaN
+          strong: data.strong_side,
+          weak: data.weak_side,
         };
         setBattingStats(batting);
         setStatsData(batting); // Default to batting stats
