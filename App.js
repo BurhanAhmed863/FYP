@@ -17,11 +17,13 @@ import EnterTournamentName from './screens/EnterTournamentName';
 import EnterTournamentTeamName from './screens/EnterTournamentTeamName';
 import EnterTournamentPlayers from './screens/EnterTournamentPlayers';
 import { ThemeProvider } from './theme/ThemeContext'; // Ensure correct import path
-import BowlingSpeed from './screens/BowlingSpeed';
 import BallVision from './screens/BallVision';
 import BallVisionPreview from './screens/BallVisionPreview';
 import SpeedDisplayScreen from './screens/SpeedDisplayScreen';
 import SpeedHistory from './screens/SpeedHistory';
+import ActionTrack from './screens/ActionTrack';
+import ActionPreview from './screens/ActionPreview';
+import ActionTrackResult from './screens/ActionTrackResult';
 import TournamentDetail from './screens/TournamentDetail';
 import PointsTable from './screens/PointsTable';
 import FixturesScreen from './screens/FixturesScreen';
@@ -59,6 +61,9 @@ const App = () => {
           <Stack.Screen name="BallVision" component={BallVision} options={{ headerShown: false }} />
           <Stack.Screen name="BallVisionPreview" component={BallVisionPreview} options={{ headerShown: false }} />
           <Stack.Screen name="SpeedHistory" component={SpeedHistory} options={{ headerShown: false }} />
+          <Stack.Screen name="ActionTrack" component={ActionTrack} options={{ headerShown: false }} />
+          <Stack.Screen name="ActionPreview" component={ActionPreview} options={{ headerShown: false }} />
+          <Stack.Screen name="ActionTrackResult" component={ActionTrackResult} options={{ headerShown: false }} />
           <Stack.Screen name="TournamentDetail" component={TournamentDetail} options={{ headerShown: false }} />
           <Stack.Screen name="PointsTable" component={PointsTable} options={{ headerShown: false }} />
           <Stack.Screen name="FixturesScreen" component={FixturesScreen} options={{ headerShown: false }} />
