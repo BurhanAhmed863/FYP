@@ -119,7 +119,7 @@ const Dashboard = () => {
                         </LinearGradient>
                     </TouchableOpacity>
 
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => (navigation.navigate('ActionTrack'))}>
                         <LinearGradient
                             colors={['#434343', '#000000']} // Define your gradient colors
                             start={{ x: 1, y: 0 }} // Optional: starting point of the gradient
